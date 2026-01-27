@@ -98,21 +98,24 @@ void Delete()
     {
         arr[i] = arr[i + 1];
     }
-     if (n - 1 == 0) {
+
+    if (n - 1 == 0)
+    {
         free(arr);
         arr = NULL;
         n = 0;
-    }else{
-    int *temp = (int *)realloc(arr, sizeof(int) * (n - 1));
-    if (temp == NULL)
-    {
-        printf("Memory Reallocation failed! ");
-        return;
     }
-    arr = temp;
-    n--;
-}
-
+    else
+    {
+        int *temp = (int *)realloc(arr, sizeof(int) * (n - 1));
+        if (temp == NULL)
+        {
+            printf("Memory Reallocation failed! ");
+            return;
+        }
+        arr = temp;
+        n--;
+    }
     printf("Element successfully deleted! ");
 }
 
@@ -224,10 +227,11 @@ void Merge()
     {
         scanf("%d", &arr2[i]);
     }
-    int* temp = (int*)realloc(arr, sizeof(int) * (n + n2));
+    int *temp = (int *)realloc(arr, sizeof(int) * (n + n2));
     if (temp == NULL)
     {
         printf("Memory Reallocation failed");
+        free(arr2);
         return;
     }
     arr = temp;
