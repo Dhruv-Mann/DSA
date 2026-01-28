@@ -55,7 +55,7 @@ void Insert()
     scanf("%d", &pos);
     if (pos < 0 || pos > n)
     {
-        printf("Invalid Postion! ");
+        printf("Invalid Position! ");
         return;
     }
     int *temp = (int *)realloc(arr, sizeof(int) * (n + 1));
@@ -75,7 +75,7 @@ void Insert()
     }
     arr[pos] = elem;
     n++;
-    printf("Element inserted successfuly! ");
+    printf("Element inserted successfully!\n");
 }
 
 // 4. Deletion
@@ -87,7 +87,7 @@ void Delete()
         return;
     }
     int pos;
-    printf("Enter the postion you want to delete the element at: ");
+    printf("Enter the position you want to delete the element at: ");
     scanf("%d", &pos);
     if (pos < 0 || pos >= n)
     {
@@ -116,7 +116,7 @@ void Delete()
         arr = temp;
         n--;
     }
-    printf("Element successfully deleted! ");
+    printf("Element successfully deleted!\n");
 }
 
 // 5. Searching
@@ -126,7 +126,7 @@ void Search()
     int found = 0;
     if (n == 0)
     {
-        printf("Element is empty! ");
+        printf("Array is empty! ");
         return;
     }
     printf("Enter the element you want to find in the array: ");
@@ -135,14 +135,14 @@ void Search()
     {
         if (arr[i] == key)
         {
-            printf("Array found at the index: %d", i);
+            printf("Elenement found at index: %d\n", i);
             found = 1;
             break;
         }
     }
     if (found == 0)
     {
-        printf("Element not found in the Array! ");
+        printf("Element not found in the Array!\n");
     }
 }
 
@@ -156,7 +156,7 @@ void Update()
     }
     int index, element;
 
-    printf("Enter the postion where you want to change the element: ");
+    printf("Enter the position where you want to change the element: ");
     scanf("%d", &index);
     if (index < 0 || index >= n)
     {
@@ -167,7 +167,7 @@ void Update()
     scanf("%d", &element);
     arr[index] = element;
 
-    printf("Element updated successfully! ");
+    printf("Element updated successfully!\n");
 }
 
 // 7. Sorting
@@ -197,7 +197,7 @@ void Bubble_Sort()
             break;
         }
     }
-    printf("Array sorted successfully! ");
+    printf("Array sorted successfully!\n");
 }
 
 // 8. Merging
@@ -241,4 +241,231 @@ void Merge()
     }
     n = n + n2;
     free(arr2);
+    printf("Arrays merged successfully!\n");
+}
+
+// 9. Copying
+void Copy()
+{
+    if (n == 0)
+    {
+        printf("Empty Array cannot be copied! ");
+        return;
+    }
+    int *arr2 = (int *)malloc(sizeof(int) * n);
+    if (arr2 == NULL)
+    {
+        printf("Memory allocation failed! ");
+        ;
+        return;
+    }
+
+    for (int i = 0; i < n; i++)
+    {
+        arr2[i] = arr[i];
+    }
+    printf("Array copied successfully! Here is the copy:\n");
+    for (int i = 0; i < n; i++)
+    {
+        printf("%d ", arr2[i]);
+    }
+    printf("\n");
+    free(arr2);
+}
+
+// 10. Reversing
+void Reverse()
+{
+    if (n == 0)
+    {
+        printf("Empty Array cannot be reversed! ");
+        return;
+    }
+    int start = 0;
+    int end = n - 1;
+    int temp;
+    while (start < end)
+    {
+        temp = arr[start];
+        arr[start] = arr[end];
+        arr[end] = temp;
+        start++;
+        end--;
+    }
+    printf("Array reversed successfully!\n");
+}
+
+// 11. Counting Elements
+void Counting_Elements()
+{
+    if (n == 0)
+    {
+        printf("List is empty! ");
+        return;
+    }
+    printf("Total number of elements in the Array: %d\n", n); // O(1)
+    // int count = 0;
+    // for(int i = 0; i <n; i++){
+    //     count++;
+    // }
+    // printf("Total number of elements in the array are: %d" , count);  //O(n)
+}
+// 12. Finding Minimum Element
+void Minimum()
+{
+    if (n == 0)
+    {
+        printf("List is empty! ");
+        return;
+    }
+    int min = arr[0];
+    for (int i = 1; i < n; i++)
+    {
+        if (arr[i] < min)
+        {
+            min = arr[i];
+        }
+    }
+    printf("Minimum element in the array is: %d\n", min);
+}
+
+// 13. Finding Maximum Element
+void Maximum()
+{
+    if (n == 0)
+    {
+        printf("List is empty! ");
+        return;
+    }
+    int max = arr[0];
+    for (int i = 1; i < n; i++)
+    {
+        if (arr[i] > max)
+        {
+            max = arr[i];
+        }
+    }
+    printf("Maximum element in the array is: %d\n", max);
+}
+
+// 14. Sum of Elements
+void Sum()
+{
+    if (n == 0)
+    {
+        printf("List is Empty! ");
+        return;
+    }
+    int sum = 0;
+    for (int i = 0; i < n; i++)
+    {
+        sum += arr[i];
+    }
+    printf("Sum of all the elements in the array: %d\n", sum);
+}
+
+// 15. Average of Elements
+void Average()
+{
+    if (n == 0)
+    {
+        printf("List is empty! ");
+        return;
+    }
+    int sum = 0;
+    for (int i = 0; i < n; i++)
+    {
+        sum += arr[i];
+    }
+    printf("The Average of the elements in the array is: %.2f\n", (float)sum / n);
+}
+
+int main()
+{
+    int choice;
+
+    while (1)
+    {
+        printf("\n========== ARRAY OPERATIONS MENU ==========\n");
+        printf("1.  Create/Initialize Array\n");
+        printf("2.  Traverse/Display Array\n");
+        printf("3.  Insert Element\n");
+        printf("4.  Delete Element\n");
+        printf("5.  Search Element\n");
+        printf("6.  Update/Modify Element\n");
+        printf("7.  Sort Array (Bubble Sort)\n");
+        printf("8.  Merge Two Arrays\n");
+        printf("9.  Copy Array\n");
+        printf("10. Reverse Array\n");
+        printf("11. Count Elements\n");
+        printf("12. Find Minimum Element\n");
+        printf("13. Find Maximum Element\n");
+        printf("14. Sum of Elements\n");
+        printf("15. Average of Elements\n");
+        printf("0.  Exit\n");
+        printf("===========================================\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice)
+        {
+        case 1:
+            create();
+            break;
+        case 2:
+            Traverse();
+            break;
+        case 3:
+            Insert();
+            break;
+        case 4:
+            Delete();
+            break;
+        case 5:
+            Search();
+            break;
+        case 6:
+            Update();
+            break;
+        case 7:
+            Bubble_Sort();
+            break;
+        case 8:
+            Merge();
+            break;
+        case 9:
+            Copy();
+            break;
+        case 10:
+            Reverse();
+            break;
+        case 11:
+            Counting_Elements();
+            break;
+        case 12:
+            Minimum();
+            break;
+        case 13:
+            Maximum();
+            break;
+        case 14:
+            Sum();
+            break;
+        case 15:
+            Average();
+            break;
+        case 0:
+            printf("\nExiting program... Thank you!\n");
+            if (arr != NULL)
+            {
+                free(arr);
+            }
+            exit(0);
+        default:
+            printf("\nInvalid choice! Please enter a number between 0 and 15.\n");
+        }
+        printf("\n");
+    }
+
+    return 0;
 }
