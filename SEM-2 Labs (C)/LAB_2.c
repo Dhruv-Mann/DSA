@@ -8,7 +8,6 @@
 // Function to swap two integers using pointers
 void swap(int *x, int *y)
 {
-
     int temp = *x;
     *x = *y;
     *y = temp;
@@ -31,12 +30,12 @@ void selection(int arr[], int n)
         }
         swap(&arr[min_idx], &arr[i]);  // Swap the found minimum with the current position
     }
-    printf("Sorted Array: \n\n");
+    printf("\nSorted Array (Selection Sort): ");
     for (i = 0; i < n; i++)
     {
         printf("%d ", arr[i]);
     }
-    printf("\n");
+    printf("\n\n");
 }
 
 // Function to perform Insertion Sort on an array
@@ -55,12 +54,12 @@ void insertion(int arr[], int n)
         }
         arr[j + 1] = key;  // Insert the key at its correct position
     }
-    printf("Sorted Array: \n\n");
+    printf("\nSorted Array (Insertion Sort): ");
     for (i = 0; i < n; i++)
     {
         printf("%d ", arr[i]);
     }
-    printf("\n");
+    printf("\n\n");
 }
 
 // Main function - Entry point of the program
@@ -71,10 +70,10 @@ int main()
     int arr[100];
     printf("Enter the number of elements of array: ");
     scanf("%d", &n);
-    if (n <= 0)
+    if (n <= 0 || n > 100)
     {
-        printf("Inavlid array size. ");
-        return 0;
+        printf("Invalid array size. Please enter a value between 1 and 100.\n");
+        return 1;
     }
     printf("Enter the elements of the array: ");
     for (i = 0; i < n; i++)
@@ -87,9 +86,11 @@ int main()
     // Menu-driven loop to allow user to choose sorting method or exit
     do
     {
-        printf("Enter 1 to sort the array using Selection Sort. \n");
-        printf("Enter 2 to sort the array using Insertion Sort. \n");
-        printf("Enter 3 to exit the loop. \n");
+        printf("\n-------MENU-------\n");
+        printf("1. Sort using Selection Sort\n");
+        printf("2. Sort using Insertion Sort\n");
+        printf("3. Exit\n");
+        printf("Enter your choice: ");
         scanf("%d", &choice);
 
         switch (choice)
@@ -101,15 +102,14 @@ int main()
             insertion(arr, n);
             break;
         case 3:
-            printf("Exiting the code...");
+            printf("Exiting the program...\n");
             break;
 
         default:
-            printf("Invalid Choice.\n");
+            printf("Invalid choice. Please try again.\n");
             break;
         }
     } while (choice != 3);
 
-    
     return 0;
 }
