@@ -1,3 +1,11 @@
+/*
+ * LAB_4.c - Singly Linked List Implementation for Student Records
+ * This program demonstrates various operations on a singly linked list:
+ * - Insert at front, end, or specific position
+ * - Delete from front, end, or by USN
+ * - Display all records and count students
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -22,14 +30,13 @@ struct Student *head = NULL;
 // Returns: pointer to the newly created node, or NULL if memory allocation fails
 struct Student *createNode()
 {
-
     // Dynamically allocate memory for a new student node
     struct Student *temp = (struct Student *)malloc(sizeof(struct Student));
 
     // Check if memory allocation was successful
     if (temp == NULL)
     {
-        printf("Memory Allocation FAILED !");
+        printf("Memory allocation failed!\n");
         return NULL;
     }
     // Collect student information from user
@@ -72,7 +79,7 @@ void Insert_Front()
         newNode->next = head; // Make new node point to current first node
         head = newNode;       // Update head to point to new node
     }
-    printf("Student inserted at the front successfully! \n");
+    printf("Student inserted at the front successfully!\n");
 }
 
 // Function to insert a new student node at the end of the linked list
@@ -178,7 +185,7 @@ void Delete_Front()
     // Check if list is empty
     if (head == NULL)
     {
-        printf("List is Empty");
+        printf("List is empty. Cannot delete.\n");
         return;
     }
     else
@@ -186,6 +193,7 @@ void Delete_Front()
         struct Student *temp = head; // Store reference to current first node
         head = head->next;           // Move head to the next node
         free(temp);                  // Free memory of the deleted node
+        printf("Student deleted from the front successfully!\n");
     }
 }
 // Function to delete the last node from the linked list
@@ -195,7 +203,7 @@ void Delete_End()
     // Case 1: Check if list is empty
     if (head == NULL)
     {
-        printf("List is empty.");
+        printf("List is empty. Cannot delete.\n");
         return;
     }
  
@@ -204,6 +212,7 @@ void Delete_End()
     {
         free(head);  // Free the only node
         head = NULL; // Set head to NULL to indicate empty list
+        printf("Student deleted from the end successfully!\n");
     }
     // Case 3: If list has multiple nodes
     else
@@ -222,6 +231,7 @@ void Delete_End()
         free(temp->next); // Free the last node (temp->next)
 
         temp->next = NULL; // Update second-last node's next to NULL
+        printf("Student deleted from the end successfully!\n");
     }
 }
 
@@ -234,7 +244,7 @@ void Delete_By_USN()
     // Check if list is empty
     if (head == NULL)
     {
-        printf("List is Empty!");
+        printf("List is empty!\n");
         return;
     }
 
@@ -248,7 +258,7 @@ void Delete_By_USN()
         struct Student *temp = head; // Store reference to current head
         head = head->next;           // Move head to next node
         free(temp);                  // Free the deleted node
-        printf("Student with USN %s was deleted. (Head was the first node!)", target);
+        printf("Student with USN %s was deleted successfully!\n", target);
         return;
     }
     
@@ -258,7 +268,7 @@ void Delete_By_USN()
     // LOOP LOGIC: Traverse until we find the node before the target
     // We need the previous node to update its 'next' pointer
     // Continue while: (1) next node exists AND (2) next node's USN doesn't match
-    while (temp->next != 0 && strcmp(temp->next->USN, target) != 0)
+    while (temp->next != NULL && strcmp(temp->next->USN, target) != 0)
     {
         temp = temp->next; // Move to next node
     }
@@ -266,7 +276,7 @@ void Delete_By_USN()
     // After loop, check if target was found
     if (temp->next == NULL)
     {
-        printf("Target was not found in the List! ");
+        printf("Student with USN %s not found in the list!\n", target);
     }
     else
     {
@@ -274,7 +284,7 @@ void Delete_By_USN()
         struct Student *to_Delete = temp->next;  // Store node to delete
         temp->next = temp->next->next;           // Bypass the node to delete
         free(to_Delete);                         // Free memory
-        printf("Student with USN %s was successfully deleted. ", target);
+        printf("Student with USN %s was successfully deleted.\n", target);
     }
 }
 
@@ -285,7 +295,7 @@ void Display()
     // Check if list is empty
     if (head == NULL)
     {
-        printf("List is empty");
+        printf("List is empty. No students to display.\n");
         return;
     }
     else
@@ -293,23 +303,37 @@ void Display()
         struct Student *temp = head; // Start from the first node
         int count = 0;               // Counter to track number of students
 
+        printf("\n--- Student Records ---\n");
         // LOOP LOGIC: Traverse through entire list and display each student
         // Continue until we reach the end of list (temp becomes NULL)
         // At the end of list, the last node's next pointer is NULL
         while (temp != NULL)
         {
             // Display current student's information
-            printf("USN: %s", temp->USN);
-            printf("\nName: %s", temp->Name);
-            printf("\nBranch: %s", temp->Branch);
-            printf("\nPhone Number: %s", temp->Phone_Number);
-            printf("\nSEM: %d", temp->sem);
+            printf("\n[Student %d]\n", count + 1);
+            printf("USN: %s\n", temp->USN);
+            printf("Name: %s\n", temp->Name);
+            printf("Branch: %s\n", temp->Branch);
+            printf("Phone Number: %s\n", temp->Phone_Number);
+            printf("Semester: %d\n", temp->sem);
 
             temp = temp->next; // Move to the next node in the list
             count++;           // Increment student counter
         }
         // After loop completes, all nodes have been visited
-        printf("\nTotal number of students: %d", count);
+        printf("\nTotal number of students: %d\n", count);
+    }
+}
+
+// Function to free all nodes in the list (cleanup before exit)
+void freeList()
+{
+    struct Student *temp;
+    while (head != NULL)
+    {
+        temp = head;
+        head = head->next;
+        free(temp);
     }
 }
 
@@ -318,8 +342,8 @@ int main()
 {
     int choice; // Variable to store user's menu choice
 
-    // Display menu options to user
-    printf("\n--- SINGLY LINKED LIST MENU ---\n");
+    // Display menu options to user (shown only once)
+    printf("\n=== SINGLY LINKED LIST MENU ===\n");
     printf("1. Create / Insert at Front\n"); // Syllabus asks to create using front insertion
     printf("2. Insert at End\n");
     printf("3. Insert at a specific position\n");
@@ -328,6 +352,7 @@ int main()
     printf("6. Delete by specific USN\n");
     printf("7. Display & Count\n");
     printf("8. Exit\n");
+    printf("================================\n");
 
     // DO-WHILE LOOP LOGIC: Menu-driven program that runs repeatedly
     // The loop ensures menu is displayed at least once
@@ -363,12 +388,15 @@ int main()
             Display(); // Display all students and count
             break;
         case 8:
-            printf("Exiting the program. "); // Exit the program
+            printf("Exiting the program...\n"); // Exit the program
             break;
         default:
-            printf("Invalid choice!\n"); // Handle invalid input
+            printf("Invalid choice! Please try again.\n"); // Handle invalid input
         }
     } while (choice != 8); // Loop continues until user enters 8
+
+    // Free all allocated memory before exiting
+    freeList();
 
     return 0;
 }
