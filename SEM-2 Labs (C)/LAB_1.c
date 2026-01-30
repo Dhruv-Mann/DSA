@@ -13,15 +13,23 @@ int *arr;       // Pointer to the dynamically allocated array
 // Function to create and initialize the array
 void create()
 {
-    printf("Enter the number of elements of an array:");
+    printf("Enter the number of elements of an array: ");
     scanf("%d", &n);
+    
+    if (n <= 0)
+    {
+        printf("Invalid number of elements!\n");
+        n = 0;
+        return;
+    }
+    
     arr = (int *)malloc(sizeof(int) * n);
     if (arr == NULL)
     {
-        printf("memory Allocation Failed!");
-        exit(0);
+        printf("Memory allocation failed!\n");
+        exit(1);
     }
-    printf("Enter %d elements of the array: ",n);
+    printf("Enter %d elements of the array: ", n);
     // Loop to read n elements from user input
     // i starts at 0, continues while i < n, increments i each time
     for (int i = 0; i < n; i++)
@@ -35,16 +43,18 @@ void display()
 {
     if (n == 0)
     {
-        printf("Array is empty!");
+        printf("Array is empty!\n");
     }
     else
     {
+        printf("Array elements: ");
         // Loop to print all elements of the array
         // i starts at 0, continues while i < n, increments i each time
         for (int i = 0; i < n; i++)
         {
             printf("%d ", arr[i]);
         }
+        printf("\n");
     }
 }
 
@@ -57,10 +67,16 @@ void Insert()
 
     if (pos < 0 || pos > n)
     {
-        printf("Inavlid Position!");
+        printf("Invalid position!\n");
         return;
     }
+    
     arr = (int *)realloc(arr, sizeof(int) * (n + 1));
+    if (arr == NULL)
+    {
+        printf("Memory reallocation failed!\n");
+        exit(1);
+    }
 
     printf("Enter the element you want to add: ");
     scanf("%d", &elem);
@@ -85,19 +101,35 @@ void delete()
     scanf("%d", &pos);
     if (pos < 0 || pos >= n)
     {
-        printf("Invalid position!");
+        printf("Invalid position!\n");
         return;
     }
+    
     // Loop to shift elements to the left to fill the gap after deletion
     // i starts at pos, continues while i < n-1, increments i each time
     for (int i = pos; i < n - 1; i++)
     {
         arr[i] = arr[i + 1];
     }
-    arr = (int *)realloc(arr, sizeof(int) * (n - 1));
+    
     n--;
+    
+    if (n > 0)
+    {
+        arr = (int *)realloc(arr, sizeof(int) * n);
+        if (arr == NULL)
+        {
+            printf("Memory reallocation failed!\n");
+            exit(1);
+        }
+    }
+    else
+    {
+        free(arr);
+        arr = NULL;
+    }
 
-    printf("Element successfully deleted!");
+    printf("Element successfully deleted!\n");
 }
 // Main function - entry point of the program
 int main()
@@ -106,12 +138,13 @@ int main()
 
     do
     {
-        printf("-------MENU------\n");
-        printf("Enter 1 to Create an Array. \n");
-        printf("Enter 2 to Display the Array. \n");
-        printf("Enter 3 to INSERT an Element. \n");
-        printf("Enter 4 to DELETE an Array. \n");
-        printf("Enter 5 to Exit the program. \n");
+        printf("\n-------MENU-------\n");
+        printf("1. Create an Array\n");
+        printf("2. Display the Array\n");
+        printf("3. Insert an Element\n");
+        printf("4. Delete an Element\n");
+        printf("5. Exit the Program\n");
+        printf("Enter your choice: ");
         scanf("%d", &choice);
 
         switch (choice)
@@ -129,14 +162,20 @@ int main()
             delete();
             break;
         case 5:
-            printf("Exiting the program..");
+            printf("Exiting the program...\n");
             break;
         default:
-            printf("Invalid Choice!");
+            printf("Invalid choice!\n");
             break;
         }
     // Continue the menu loop until user chooses to exit (choice != 5)
     } while (choice != 5);
+
+    // Free allocated memory before exiting
+    if (arr != NULL)
+    {
+        free(arr);
+    }
 
     return 0;
 }
