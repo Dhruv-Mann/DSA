@@ -1,1 +1,1 @@
-A menu driven program where you can perform all kinds of array operations with just one click. 
+This folder consists of all the sorting algorithms I have learnt so far in C.
