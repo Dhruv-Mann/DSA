@@ -135,7 +135,7 @@ void Search()
     {
         if (arr[i] == key)
         {
-            printf("Elenement found at index: %d\n", i);
+            printf("Element found at index: %d\n", i);
             found = 1;
             break;
         }
@@ -222,7 +222,7 @@ void Merge()
         printf("Memory allocation for the second array failed! ");
         return;
     }
-    printf("Enter the element of the array: ");
+    printf("Enter the elements of the array: ");
     for (int i = 0; i < n2; i++)
     {
         scanf("%d", &arr2[i]);
@@ -256,7 +256,6 @@ void Copy()
     if (arr2 == NULL)
     {
         printf("Memory allocation failed! ");
-        ;
         return;
     }
 
@@ -380,30 +379,530 @@ void Average()
     printf("The Average of the elements in the array is: %.2f\n", (float)sum / n);
 }
 
+// 16. Binary Search (requires sorted array)
+void Binary_Search()
+{
+    if (n == 0)
+    {
+        printf("Array is empty! ");
+        return;
+    }
+    int key, left = 0, right = n - 1, found = 0;
+    printf("Enter the element to search: ");
+    scanf("%d", &key);
+
+    while (left <= right)
+    {
+        int mid = left + (right - left) / 2;
+        if (arr[mid] == key)
+        {
+            printf("Element found at index: %d\n", mid);
+            found = 1;
+            break;
+        }
+        else if (arr[mid] < key)
+        {
+            left = mid + 1;
+        }
+        else
+        {
+            right = mid - 1;
+        }
+    }
+    if (!found)
+    {
+        printf("Element not found in the array!\n");
+    }
+}
+
+// 17. Find All Occurrences
+void Find_All_Occurrences()
+{
+    if (n == 0)
+    {
+        printf("Array is empty! ");
+        return;
+    }
+    int key, found = 0;
+    printf("Enter the element to find all occurrences: ");
+    scanf("%d", &key);
+    printf("Element %d found at indices: ", key);
+    for (int i = 0; i < n; i++)
+    {
+        if (arr[i] == key)
+        {
+            printf("%d ", i);
+            found = 1;
+        }
+    }
+    if (!found)
+    {
+        printf("Not found");
+    }
+    printf("\n");
+}
+
+// 18. Rotate Array Left
+void Rotate_Left()
+{
+    if (n == 0)
+    {
+        printf("Array is empty! ");
+        return;
+    }
+    int k;
+    printf("Enter number of positions to rotate left: ");
+    scanf("%d", &k);
+    k = k % n; // Handle k > n
+    if (k < 0)
+        k = k + n;
+
+    // Reverse first k elements
+    for (int i = 0; i < k / 2; i++)
+    {
+        int temp = arr[i];
+        arr[i] = arr[k - 1 - i];
+        arr[k - 1 - i] = temp;
+    }
+    // Reverse remaining elements
+    for (int i = k; i < (n + k) / 2; i++)
+    {
+        int temp = arr[i];
+        arr[i] = arr[n - 1 - (i - k)];
+        arr[n - 1 - (i - k)] = temp;
+    }
+    // Reverse entire array
+    for (int i = 0; i < n / 2; i++)
+    {
+        int temp = arr[i];
+        arr[i] = arr[n - 1 - i];
+        arr[n - 1 - i] = temp;
+    }
+    printf("Array rotated left by %d positions successfully!\n", k);
+}
+
+// 19. Rotate Array Right
+void Rotate_Right()
+{
+    if (n == 0)
+    {
+        printf("Array is empty! ");
+        return;
+    }
+    int k;
+    printf("Enter number of positions to rotate right: ");
+    scanf("%d", &k);
+    k = k % n; // Handle k > n
+    if (k < 0)
+        k = k + n;
+
+    // Reverse entire array
+    for (int i = 0; i < n / 2; i++)
+    {
+        int temp = arr[i];
+        arr[i] = arr[n - 1 - i];
+        arr[n - 1 - i] = temp;
+    }
+    // Reverse first k elements
+    for (int i = 0; i < k / 2; i++)
+    {
+        int temp = arr[i];
+        arr[i] = arr[k - 1 - i];
+        arr[k - 1 - i] = temp;
+    }
+    // Reverse remaining elements
+    for (int i = k; i < (n + k) / 2; i++)
+    {
+        int temp = arr[i];
+        arr[i] = arr[n - 1 - (i - k)];
+        arr[n - 1 - (i - k)] = temp;
+    }
+    printf("Array rotated right by %d positions successfully!\n", k);
+}
+
+// 20. Remove Duplicates
+void Remove_Duplicates()
+{
+    if (n == 0)
+    {
+        printf("Array is empty! ");
+        return;
+    }
+    int unique_count = 0;
+    int *temp = (int *)malloc(sizeof(int) * n);
+    if (temp == NULL)
+    {
+        printf("Memory allocation failed! ");
+        return;
+    }
+
+    for (int i = 0; i < n; i++)
+    {
+        int is_duplicate = 0;
+        for (int j = 0; j < unique_count; j++)
+        {
+            if (arr[i] == temp[j])
+            {
+                is_duplicate = 1;
+                break;
+            }
+        }
+        if (!is_duplicate)
+        {
+            temp[unique_count++] = arr[i];
+        }
+    }
+
+    // Copy back to original array
+    for (int i = 0; i < unique_count; i++)
+    {
+        arr[i] = temp[i];
+    }
+    free(temp);
+
+    // Reallocate array
+    int *new_arr = (int *)realloc(arr, sizeof(int) * unique_count);
+    if (new_arr == NULL && unique_count > 0)
+    {
+        printf("Memory reallocation failed! ");
+        return;
+    }
+    arr = new_arr;
+    n = unique_count;
+    printf("Duplicates removed successfully! New size: %d\n", n);
+}
+
+// 21. Find Second Largest
+void Second_Largest()
+{
+    if (n < 2)
+    {
+        printf("Array must have at least 2 elements! ");
+        return;
+    }
+    int first = arr[0], second = -2147483648; // INT_MIN
+    for (int i = 1; i < n; i++)
+    {
+        if (arr[i] > first)
+        {
+            second = first;
+            first = arr[i];
+        }
+        else if (arr[i] > second && arr[i] != first)
+        {
+            second = arr[i];
+        }
+    }
+    if (second == -2147483648)
+    {
+        printf("No second largest element exists (all elements are same)!\n");
+    }
+    else
+    {
+        printf("Second largest element: %d\n", second);
+    }
+}
+
+// 22. Find Second Smallest
+void Second_Smallest()
+{
+    if (n < 2)
+    {
+        printf("Array must have at least 2 elements! ");
+        return;
+    }
+    int first = arr[0], second = 2147483647; // INT_MAX
+    for (int i = 1; i < n; i++)
+    {
+        if (arr[i] < first)
+        {
+            second = first;
+            first = arr[i];
+        }
+        else if (arr[i] < second && arr[i] != first)
+        {
+            second = arr[i];
+        }
+    }
+    if (second == 2147483647)
+    {
+        printf("No second smallest element exists (all elements are same)!\n");
+    }
+    else
+    {
+        printf("Second smallest element: %d\n", second);
+    }
+}
+
+// 23. Check if Array is Sorted
+void Check_Sorted()
+{
+    if (n == 0)
+    {
+        printf("Array is empty! ");
+        return;
+    }
+    int ascending = 1, descending = 1;
+    for (int i = 0; i < n - 1; i++)
+    {
+        if (arr[i] > arr[i + 1])
+            ascending = 0;
+        if (arr[i] < arr[i + 1])
+            descending = 0;
+    }
+    if (ascending)
+        printf("Array is sorted in ascending order.\n");
+    else if (descending)
+        printf("Array is sorted in descending order.\n");
+    else
+        printf("Array is not sorted.\n");
+}
+
+// 24. Frequency Count
+void Frequency_Count()
+{
+    if (n == 0)
+    {
+        printf("Array is empty! ");
+        return;
+    }
+    int *visited = (int *)calloc(n, sizeof(int));
+    if (visited == NULL)
+    {
+        printf("Memory allocation failed! ");
+        return;
+    }
+
+    printf("Element Frequency:\n");
+    for (int i = 0; i < n; i++)
+    {
+        if (visited[i] == 1)
+            continue;
+        int count = 1;
+        for (int j = i + 1; j < n; j++)
+        {
+            if (arr[i] == arr[j])
+            {
+                count++;
+                visited[j] = 1;
+            }
+        }
+        printf("%d -> %d times\n", arr[i], count);
+    }
+    free(visited);
+}
+
+// 25. Find Missing Number (1 to n+1 sequence)
+void Find_Missing_Number()
+{
+    if (n == 0)
+    {
+        printf("Array is empty! ");
+        return;
+    }
+    printf("Note: This assumes array contains numbers from 1 to n+1 with one missing.\n");
+    int expected_sum = ((n + 1) * (n + 2)) / 2;
+    int actual_sum = 0;
+    for (int i = 0; i < n; i++)
+    {
+        actual_sum += arr[i];
+    }
+    int missing = expected_sum - actual_sum;
+    printf("Missing number: %d\n", missing);
+}
+
+// 26. Find All Duplicates
+void Find_Duplicates()
+{
+    if (n == 0)
+    {
+        printf("Array is empty! ");
+        return;
+    }
+    int *visited = (int *)calloc(n, sizeof(int));
+    if (visited == NULL)
+    {
+        printf("Memory allocation failed! ");
+        return;
+    }
+
+    int found = 0;
+    printf("Duplicate elements: ");
+    for (int i = 0; i < n; i++)
+    {
+        if (visited[i] == 1)
+            continue;
+        int count = 0;
+        for (int j = i + 1; j < n; j++)
+        {
+            if (arr[i] == arr[j])
+            {
+                count++;
+                visited[j] = 1;
+            }
+        }
+        if (count > 0)
+        {
+            printf("%d ", arr[i]);
+            found = 1;
+        }
+    }
+    if (!found)
+    {
+        printf("None");
+    }
+    printf("\n");
+    free(visited);
+}
+
+// 27. Product of Elements
+void Product()
+{
+    if (n == 0)
+    {
+        printf("Array is empty! ");
+        return;
+    }
+    long long product = 1;
+    for (int i = 0; i < n; i++)
+    {
+        product *= arr[i];
+    }
+    printf("Product of all elements: %lld\n", product);
+}
+
+// 28. Find Median
+void Find_Median()
+{
+    if (n == 0)
+    {
+        printf("Array is empty! ");
+        return;
+    }
+    // First sort the array (create a copy to not modify original)
+    int *temp = (int *)malloc(sizeof(int) * n);
+    if (temp == NULL)
+    {
+        printf("Memory allocation failed! ");
+        return;
+    }
+    for (int i = 0; i < n; i++)
+    {
+        temp[i] = arr[i];
+    }
+
+    // Bubble sort the copy
+    for (int i = 0; i < n - 1; i++)
+    {
+        for (int j = 0; j < n - i - 1; j++)
+        {
+            if (temp[j] > temp[j + 1])
+            {
+                int swap = temp[j];
+                temp[j] = temp[j + 1];
+                temp[j + 1] = swap;
+            }
+        }
+    }
+
+    float median;
+    if (n % 2 == 0)
+    {
+        median = (temp[n / 2 - 1] + temp[n / 2]) / 2.0;
+    }
+    else
+    {
+        median = temp[n / 2];
+    }
+    printf("Median of the array: %.2f\n", median);
+    free(temp);
+}
+
+// 29. Standard Deviation
+void Standard_Deviation()
+{
+    if (n == 0)
+    {
+        printf("Array is empty! ");
+        return;
+    }
+    // Calculate mean
+    float sum = 0;
+    for (int i = 0; i < n; i++)
+    {
+        sum += arr[i];
+    }
+    float mean = sum / n;
+
+    // Calculate variance
+    float variance = 0;
+    for (int i = 0; i < n; i++)
+    {
+        variance += (arr[i] - mean) * (arr[i] - mean);
+    }
+    variance /= n;
+
+    // Standard deviation is square root of variance
+    float std_dev = 0;
+    // Simple square root calculation
+    if (variance > 0)
+    {
+        float x = variance;
+        float y = 1;
+        float e = 0.000001; // Precision
+        while (x - y > e)
+        {
+            x = (x + y) / 2;
+            y = variance / x;
+        }
+        std_dev = x;
+    }
+    printf("Standard Deviation: %.2f\n", std_dev);
+}
+
 int main()
 {
     int choice;
 
     while (1)
     {
-        printf("\n========== ARRAY OPERATIONS MENU ==========\n");
+        printf("\n============== ARRAY OPERATIONS MENU ==============\n");
+        printf("--- BASIC OPERATIONS ---\n");
         printf("1.  Create/Initialize Array\n");
         printf("2.  Traverse/Display Array\n");
         printf("3.  Insert Element\n");
         printf("4.  Delete Element\n");
-        printf("5.  Search Element\n");
+        printf("5.  Search Element (Linear)\n");
         printf("6.  Update/Modify Element\n");
+        printf("\n--- SORTING & SEARCHING ---\n");
         printf("7.  Sort Array (Bubble Sort)\n");
+        printf("16. Binary Search (Sorted Array)\n");
+        printf("17. Find All Occurrences\n");
+        printf("\n--- ARRAY MANIPULATION ---\n");
         printf("8.  Merge Two Arrays\n");
         printf("9.  Copy Array\n");
         printf("10. Reverse Array\n");
+        printf("18. Rotate Array Left\n");
+        printf("19. Rotate Array Right\n");
+        printf("20. Remove Duplicates\n");
+        printf("\n--- STATISTICAL OPERATIONS ---\n");
         printf("11. Count Elements\n");
         printf("12. Find Minimum Element\n");
         printf("13. Find Maximum Element\n");
         printf("14. Sum of Elements\n");
         printf("15. Average of Elements\n");
-        printf("0.  Exit\n");
-        printf("===========================================\n");
+        printf("21. Find Second Largest\n");
+        printf("22. Find Second Smallest\n");
+        printf("27. Product of Elements\n");
+        printf("28. Find Median\n");
+        printf("29. Standard Deviation\n");
+        printf("\n--- ANALYSIS OPERATIONS ---\n");
+        printf("23. Check if Array is Sorted\n");
+        printf("24. Frequency Count\n");
+        printf("25. Find Missing Number\n");
+        printf("26. Find All Duplicates\n");
+        printf("\n0.  Exit\n");
+        printf("===================================================\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
 
@@ -454,6 +953,48 @@ int main()
         case 15:
             Average();
             break;
+        case 16:
+            Binary_Search();
+            break;
+        case 17:
+            Find_All_Occurrences();
+            break;
+        case 18:
+            Rotate_Left();
+            break;
+        case 19:
+            Rotate_Right();
+            break;
+        case 20:
+            Remove_Duplicates();
+            break;
+        case 21:
+            Second_Largest();
+            break;
+        case 22:
+            Second_Smallest();
+            break;
+        case 23:
+            Check_Sorted();
+            break;
+        case 24:
+            Frequency_Count();
+            break;
+        case 25:
+            Find_Missing_Number();
+            break;
+        case 26:
+            Find_Duplicates();
+            break;
+        case 27:
+            Product();
+            break;
+        case 28:
+            Find_Median();
+            break;
+        case 29:
+            Standard_Deviation();
+            break;
         case 0:
             printf("\nExiting program... Thank you!\n");
             if (arr != NULL)
@@ -462,7 +1003,7 @@ int main()
             }
             exit(0);
         default:
-            printf("\nInvalid choice! Please enter a number between 0 and 15.\n");
+            printf("\nInvalid choice! Please enter a valid option.\n");
         }
         printf("\n");
     }
