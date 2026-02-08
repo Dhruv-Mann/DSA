@@ -127,8 +127,8 @@ void create()
 void Counting_Sort(int arr[], int n)
 {
     // Find the maximum element in the array
-    int maxval = 0;
-    for (int i = 0; i < n; i++)
+    int maxval = arr[0];
+    for (int i = 1; i < n; i++)
     {
         if (arr[i] > maxval)
         {
@@ -138,6 +138,13 @@ void Counting_Sort(int arr[], int n)
 
     // Create a count array with size = maxval + 1 and initialize all values to 0
     int *Cnt_Array = (int *)calloc(maxval + 1, sizeof(int));
+    
+    // Check if memory allocation was successful
+    if (Cnt_Array == NULL)
+    {
+        printf("Memory allocation failed!\n");
+        exit(1);
+    }
 
     // Store the count of each element (frequency array)
     for (int i = 0; i < n; i++)
@@ -155,6 +162,14 @@ void Counting_Sort(int arr[], int n)
     // Create output array to store sorted elements
     int *ans = (int *)malloc(sizeof(int) * n);
     
+    // Check if memory allocation was successful
+    if (ans == NULL)
+    {
+        free(Cnt_Array);  // Clean up previously allocated memory
+        printf("Memory allocation failed!\n");
+        exit(1);
+    }
+    
     // Place elements in output array at correct sorted positions
     // Traverse from right to left to maintain stability
     for (int i = n - 1; i >= 0; i--)
@@ -170,6 +185,10 @@ void Counting_Sort(int arr[], int n)
     {
         arr[i] = ans[i];
     }
+    
+    // Free allocated memory to prevent memory leaks
+    free(Cnt_Array);
+    free(ans);
 }
 
 
