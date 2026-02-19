@@ -110,7 +110,7 @@ void Bubble_Sort(int arr[], int n)
 {
     // Outer loop: repeated passes through the array
     // After i passes, the last i elements are in their correct sorted positions
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < n - 1; i++)
     {
         // Flag to detect if any swaps occurred in this pass (optimization for early termination)
         int swapped = 0;
