@@ -1,21 +1,23 @@
 class Solution:
     def nextGreatestLetter(self, letters: List[str], target: str) -> str:
-        # 1. The Wrap Around Rule
-        # If target is bigger than the biggest letter, answer is the first letter.
+        # Handle wrap-around: if target >= largest letter, return first letter
         if target >= letters[-1]:
             return letters[0]
             
-        # 2. Standard Binary Search (Same as Insert Position)
+        # Binary search to find smallest letter greater than target
+        # When not found, 'low' will point to the next greater position
         low = 0
         high = len(letters) - 1
         
         while low <= high:
             mid = (low + high) // 2
             
+            # Current letter is <= target, search right
             if letters[mid] <= target:
                 low = mid + 1
+            # Current letter is > target, could be answer but search left for smaller
             else:
                 high = mid - 1
                 
-        # 3. Return the letter at the 'low' index
+        # 'low' now points to the smallest letter greater than target
         return letters[low]
