@@ -87,7 +87,7 @@ void createList() {
             // Link the new node after the current tail, then move tail forward
             temp->next = newNode;
             temp = temp->next;
-        }
+        } 
     }
     printf("\nList created successfully!\n");
 }
