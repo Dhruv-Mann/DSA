@@ -17,7 +17,6 @@ My journey through Data Structures & Algorithms, started at the beginning of Sem
 | **Queue-Operations/** | 5 queue variants — simple, circular, linked-list, deque, priority queue |
 | **Sorting/** | 8 sorting algorithms (Bubble, Selection, Insertion, Merge, Quick, Counting, Radix, Bucket) |
 | **Leetcodes-Python/** | LeetCode solutions in Python |
-| **SEM-2 Labs (C)/** | Lab programs from Semester 2 |
 
 Each data-structure folder contains:
 - **`operations.c`** — fully working, menu-driven C program with every operation implemented and commented.
