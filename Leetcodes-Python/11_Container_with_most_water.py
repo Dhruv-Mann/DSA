@@ -20,7 +20,10 @@ class Solution(object):
             # This is greedy: moving the taller one can only decrease area
             if height[l] < height[r]:
                 l += 1
-            else:
+            # Combined the elif and else statement because they were same as-
+            # elif -> r -= 1
+            # else -> either r -= 1 or l += 1
+            else: 
                 r -= 1
         
         return res
