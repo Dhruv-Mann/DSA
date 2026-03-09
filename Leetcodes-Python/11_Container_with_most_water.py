@@ -21,8 +21,8 @@ class Solution(object):
             if height[l] < height[r]:
                 l += 1
             # Combined the elif and else statement because they were same as-
-            # elif -> r -= 1
-            # else -> either r -= 1 or l += 1
+            # elif -> r -= 1  ( 'if height[l] > height[r]' )
+            # else -> either r -= 1 or l += 1  ( 'if height[l] == height[r]' )
             else: 
                 r -= 1
         
