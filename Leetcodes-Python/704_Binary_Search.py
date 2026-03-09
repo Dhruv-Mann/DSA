@@ -1,5 +1,7 @@
 class Solution:
     def search(self, nums: List[int], target: int) -> int:
+        # Time: O(log n) - binary search
+        # Space: O(1) - only using pointers
         # Standard binary search on sorted array
         # Return index if found, -1 otherwise
         n = len(nums)

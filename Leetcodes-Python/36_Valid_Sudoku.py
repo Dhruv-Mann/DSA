@@ -5,6 +5,8 @@ class Solution(object):
         """
         :type board: List[List[str]]
         :rtype: bool
+        Time: O(1) - fixed 9x9 board, 81 cells total
+        Space: O(1) - at most 27 sets with max 9 elements each
         """
         # Track which numbers have been seen in each row, column, and 3x3 square
         rows = defaultdict(set)

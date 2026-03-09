@@ -4,6 +4,8 @@ class Solution(object):
         :type numbers: List[int]
         :type target: int
         :rtype: List[int]
+        Time: O(n) - two pointers traverse array once
+        Space: O(1) - only using constant extra space
         """
         # Two-pointer approach because input array is sorted.
         l = 0

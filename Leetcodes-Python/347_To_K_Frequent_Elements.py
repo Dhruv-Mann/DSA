@@ -2,6 +2,8 @@ from collections import Counter
 
 class Solution(object):
     def topKFrequent(self, nums, k):
+        # Time: O(n) - counting, bucketing, and collection are all O(n)
+        # Space: O(n) - storing all unique numbers
         # 1. Count the votes
         # Output: {1: 3, 2: 2, 3: 1}
         count_map = Counter(nums)

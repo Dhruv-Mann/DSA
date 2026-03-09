@@ -3,6 +3,8 @@ class Solution(object):
         """
         :type nums: List[int]
         :rtype: int
+        Time: O(n) - each number is visited at most twice (once in set conversion, once in while loop)
+        Space: O(n) - storing all numbers in a set
         """
         # Convert list to set for O(1) lookup
         numSet = set(nums)

@@ -5,6 +5,8 @@ class Solution(object):
         """
         :type strs: List[str]
         :rtype: List[List[str]]
+        Time: O(n * k log k) - n strings, sorting each of length k
+        Space: O(n * k) - storing all strings in hash map
         """
         # Use defaultdict to group strings with the same sorted characters
         # Anagrams will have identical sorted forms, so we use that as the key

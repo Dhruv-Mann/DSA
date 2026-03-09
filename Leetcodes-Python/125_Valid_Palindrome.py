@@ -3,6 +3,8 @@ class Solution(object):
         """
         :type s: str
         :rtype: bool
+        Time: O(n) - traverse string from both ends
+        Space: O(1) - only using pointers, no extra data structures
         """
         # Two-pointer check from both ends of the string.
         L = 0

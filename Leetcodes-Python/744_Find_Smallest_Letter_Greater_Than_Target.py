@@ -1,5 +1,7 @@
 class Solution:
     def nextGreatestLetter(self, letters: List[str], target: str) -> str:
+        # Time: O(log n) - binary search
+        # Space: O(1) - only using pointers
         # Handle wrap-around: if target >= largest letter, return first letter
         if target >= letters[-1]:
             return letters[0]

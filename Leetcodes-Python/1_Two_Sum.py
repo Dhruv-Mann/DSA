@@ -4,6 +4,8 @@ class Solution(object):
         :type nums: List[int]
         :type target: int
         :rtype: List[int]
+        Time: O(n) - single pass through array
+        Space: O(n) - hash map stores up to n elements
         """
         # Hash map to store number -> index mapping
         prevMap = {}

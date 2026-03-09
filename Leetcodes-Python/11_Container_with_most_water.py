@@ -3,6 +3,8 @@ class Solution(object):
         """
         :type height: List[int]
         :rtype: int
+        Time: O(n) - single pass with two pointers
+        Space: O(1) - only using constant extra space
         """
         # Two-pointer approach: start from widest container
         res = 0

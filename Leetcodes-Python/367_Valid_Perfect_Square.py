@@ -1,5 +1,7 @@
 class Solution:
     def isPerfectSquare(self, num: int) -> bool:
+        # Time: O(log num) - binary search on range [0, num]
+        # Space: O(1) - only using pointers
         # Binary search to find if num is a perfect square
         # Check if mid * mid equals num
         low = 0

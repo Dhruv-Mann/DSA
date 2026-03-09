@@ -3,6 +3,8 @@ class Solution(object):
         """
         :type nums: List[int]
         :rtype: List[int]
+        Time: O(n) - two passes through array
+        Space: O(n) - output array of size n
         """
         # Initialize result array with all 1s
         res = [1] * len(nums)

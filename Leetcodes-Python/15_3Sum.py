@@ -3,6 +3,8 @@ class Solution(object):
         """
         :type nums: List[int]
         :rtype: List[List[int]]
+        Time: O(n^2) - sorting O(n log n), then nested loops O(n^2)
+        Space: O(1) or O(n) - depending on sorting algorithm (excluding output)
         """
         res = []
         # Sort array to enable two-pointer approach and skip duplicates

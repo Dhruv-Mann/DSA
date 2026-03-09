@@ -1,5 +1,7 @@
 class Solution:
     def removeElement(self, nums: List[int], val: int) -> int:
+        # Time: O(n) - single pass through array
+        # Space: O(1) - only using pointers, modifying in-place
         # Use two pointers: k tracks position to place non-val elements
         # Iterate through array and shift non-val elements forward
         k = 0

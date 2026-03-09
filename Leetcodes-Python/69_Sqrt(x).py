@@ -1,5 +1,7 @@
 class Solution:
     def mySqrt(self, x: int) -> int:
+        # Time: O(log x) - binary search on range [0, x]
+        # Space: O(1) - only using pointers
         # Binary search to find floor of square root
         # Return 'high' since it's the largest value where mid*mid <= x
         low = 0
