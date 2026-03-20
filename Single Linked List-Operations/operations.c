@@ -62,7 +62,7 @@ struct Node* createNode(int value) {
  */
 void createList() {
     int n, value;
-    struct Node* temp;      // will track the current tail of the list
+    struct Node* temp = NULL;      // will track the current tail of the list
     
     printf("\nEnter the number of nodes: ");
     scanf("%d", &n);
