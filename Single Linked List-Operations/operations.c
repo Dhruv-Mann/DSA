@@ -71,6 +71,13 @@ void createList() {
         printf("Invalid number of nodes!\n");
         return;
     }
+        // Free any existing list first to avoid memory leaks
+    while (head != NULL) {
+        struct Node* temp = head;
+        head = head->next;
+        free(temp);
+    }
+
     
     for (int i = 0; i < n; i++) {
         printf("Enter data for node %d: ", i + 1);
