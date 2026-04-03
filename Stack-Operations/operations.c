@@ -29,7 +29,7 @@
  *    Stacks are EVERYWHERE in computer science:
  *    - Function call stack (how recursion works)
  *    - DFS (Depth-First Search) in trees and graphs
- *    - Expression evaluation (infix → postfix)
+ *    - Expression conversion/evaluation (infix → postfix/prefix)
  *    - Undo operations
  *    - Balanced parentheses checking
  *    - Browser back button
@@ -38,7 +38,7 @@
  *    1. ARRAY-BASED  — fixed size, O(1) push/pop, simple
  *    2. LINKED-LIST-BASED — dynamic size, O(1) push/pop, no overflow
  *
- *  This program demonstrates BOTH implementations plus 3 classic applications.
+ *  This program demonstrates BOTH implementations plus 4 classic applications.
  *
  * ============================================================================
  */
@@ -480,7 +480,84 @@ void infixToPostfix() {
 }
 
 /*
- * APPLICATION 3: Postfix Expression Evaluation
+ * APPLICATION 3: Infix to Prefix Conversion
+ *
+ * Prefix: operators before operands      →  + A B
+ *
+ * Approach:
+ *   1. Reverse the infix expression.
+ *   2. Swap '(' with ')' in the reversed expression.
+ *   3. Convert this modified expression to postfix.
+ *   4. Reverse the postfix result to get prefix.
+ *
+ * Example:
+ *   Infix   : A+B*C
+ *   Prefix  : +A*BC
+ */
+void infixToPrefix() {
+    char infix[256], reversed[256], postfix[256], prefix[256];
+    char stack[256];
+    int stackTop = -1;
+    int j = 0;
+
+    printf("\nEnter an infix expression (single chars, e.g., A+B*C): ");
+    scanf("%s", infix);
+
+    int len = (int)strlen(infix);
+
+    // Reverse infix and swap parentheses
+    for (int i = 0; i < len; i++) {
+        char ch = infix[len - 1 - i];
+        if (ch == '(') ch = ')';
+        else if (ch == ')') ch = '(';
+        reversed[i] = ch;
+    }
+    reversed[len] = '\0';
+
+    // Convert modified expression to postfix
+    for (int i = 0; reversed[i] != '\0'; i++) {
+        char ch = reversed[i];
+
+        if ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') ||
+            (ch >= '0' && ch <= '9')) {
+            postfix[j++] = ch;
+        }
+        else if (ch == '(') {
+            stack[++stackTop] = ch;
+        }
+        else if (ch == ')') {
+            while (stackTop >= 0 && stack[stackTop] != '(') {
+                postfix[j++] = stack[stackTop--];
+            }
+            if (stackTop >= 0) stackTop--;  // discard '('
+        }
+        else if (isOperator(ch)) {
+            while (stackTop >= 0 && isOperator(stack[stackTop]) &&
+                   ((ch != '^' && precedence(stack[stackTop]) > precedence(ch)) ||
+                    (ch == '^' && precedence(stack[stackTop]) >= precedence(ch)))) {
+                postfix[j++] = stack[stackTop--];
+            }
+            stack[++stackTop] = ch;
+        }
+    }
+
+    while (stackTop >= 0) {
+        postfix[j++] = stack[stackTop--];
+    }
+    postfix[j] = '\0';
+
+    // Reverse postfix to get prefix
+    int pLen = (int)strlen(postfix);
+    for (int i = 0; i < pLen; i++) {
+        prefix[i] = postfix[pLen - 1 - i];
+    }
+    prefix[pLen] = '\0';
+
+    printf("Prefix: %s\n", prefix);
+}
+
+/*
+ * APPLICATION 4: Postfix Expression Evaluation
  *
  * Given a postfix expression like "23*54*+", evaluate it.
  *
@@ -588,8 +665,9 @@ void displayMenu() {
     printf("\n --- Applications ---");
     printf("\n12. Check Balanced Parentheses");
     printf("\n13. Infix to Postfix Conversion");
-    printf("\n14. Evaluate Postfix Expression");
-    printf("\n15. Exit");
+    printf("\n14. Infix to Prefix Conversion");
+    printf("\n15. Evaluate Postfix Expression");
+    printf("\n16. Exit");
     printf("\n=============================================");
     printf("\nEnter your choice: ");
 }
@@ -659,10 +737,13 @@ int main() {
                 infixToPostfix();
                 break;
             case 14:
+                infixToPrefix();
+                break;
+            case 15:
                 evaluatePostfix();
                 break;
 
-            case 15:
+            case 16:
                 printf("\nExiting program. Goodbye!\n");
                 // Free linked list stack
                 while (top != NULL) {
