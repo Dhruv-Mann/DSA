@@ -44,13 +44,26 @@ Each data-structure folder contains:
 | # | Problem | File |
 |---|---------|------|
 | 1 | Two Sum | `1_Two_Sum.py` |
+| 3 | Longest Substring Without Repeating Characters | `3_Longest_Substring_Without_Repeating_Characters.py` |
+| 11 | Container With Most Water | `11_Container_with_most_water.py` |
+| 15 | 3Sum | `15_3Sum.py` |
 | 27 | Remove Element | `27_Remove_Element.py` |
 | 35 | Search Insert Position | `35_Search_Insert_Position.py` |
+| 36 | Valid Sudoku | `36_Valid_Sudoku.py` |
+| 42 | Trapping Rain Water | `42_Trapping_Rain_Water.py` |
 | 49 | Group Anagrams | `49_Group_Anagrams.py` |
 | 69 | Sqrt(x) | `69_Sqrt(x).py` |
+| 121 | Best Time to Buy and Sell Stock | `121_Best-Time_to_Buy_and_Sell_Stock.py` |
+| 125 | Valid Palindrome | `125_Valid_Palindrome.py` |
+| 128 | Longest Consecutive Sequence | `128_Longest_Consecutive_Sequence.py` |
+| 167 | Two Sum II - Input Array Is Sorted | `167_Two_Sum _I_Input_Array_Is_Sorted.py` |
 | 217 | Contains Duplicate | `217_Contains_Duplicate.py` |
+| 238 | Product of Array Except Self | `238_Product_of_Array_Except_Self.py` |
 | 242 | Valid Anagram | `242_Valid_Anagram.py` |
+| 347 | Top K Frequent Elements | `347_To_K_Frequent_Elements.py` |
 | 367 | Valid Perfect Square | `367_Valid_Perfect_Square.py` |
+| 424 | Longest Repeating Character Replacement | `424_Longest_Repeating_Character_Replacement.py` |
+| 567 | Permutation in String | `567_Permutation_in_String.py` |
 | 704 | Binary Search | `704_Binary_Search.py` |
 | 744 | Find Smallest Letter Greater Than Target | `744_Find_Smallest_Letter_Greater_Than_Target.py` |
 
