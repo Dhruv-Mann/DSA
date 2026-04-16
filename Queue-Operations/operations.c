@@ -4,158 +4,97 @@
 /*
  * ============================================================================
  *  QUEUE — COMPLETE OPERATIONS
- *  (Simple Queue, Circular Queue, Linked-List Queue, Deque, Priority Queue)
+ *  (Linear, Circular, Deque, Priority Queue)
+ *  Each type has BOTH Array and Linked-List implementation.
  * ============================================================================
  *
- *  A Queue is an abstract data type (ADT) that follows the FIFO principle:
- *  First In, First Out.
+ *  Queue follows FIFO: First In, First Out.
  *
- *  Think of a line at a ticket counter:
- *    - New people join at the REAR (enqueue).
- *    - The person at the FRONT gets served first (dequeue).
+ *  Core operations:
+ *    - enqueue(x)
+ *    - dequeue()
+ *    - peek()/front()
+ *    - display()
  *
- *  The TWO fundamental operations:
- *    - enqueue(x) : add element x at the rear
- *    - dequeue()  : remove and return the element at the front
+ *  Deque operations:
+ *    - insertFront(x), insertRear(x)
+ *    - deleteFront(), deleteRear()
+ *    - peekFront(), peekRear(), display()
  *
- *  Additional operations:
- *    - peek() / front() : return the front element without removing
- *    - isEmpty()        : check if the queue has no elements
- *    - isFull()         : check if the queue is at capacity
- *    - display()        : show all elements
- *
- *  Why it matters:
- *    Queues are essential for:
- *    - BFS (Breadth-First Search) in trees and graphs
- *    - CPU/Disk/Printer scheduling
- *    - Handling requests (web servers, message queues)
- *    - Level-order tree traversal
- *    - Sliding window problems
+ *  Priority Queue rule in this program:
+ *    - Lower value = Higher priority (MIN priority queue)
  *
  * ============================================================================
- */
-
-/* ====================================
- *  PART 1: SIMPLE ARRAY-BASED QUEUE
- * ==================================== */
-
-/*
- * The simplest queue uses an array with two indices: front and rear.
- *
- *   front: index of the first element (the one to dequeue next)
- *   rear:  index of the last element (the one most recently enqueued)
- *
- * Problem with simple queue:
- *   After several enqueue/dequeue operations, front moves forward,
- *   leaving "holes" at the beginning of the array that can never be reused.
- *   The queue reports "full" even though there's unused space.
- *
- *   Example: MAX=5, after enqueue 5 elements then dequeue 3:
- *     arr: [_, _, _, 40, 50]    front=3, rear=4
- *     Indices 0-2 are WASTED. Can't enqueue even though 3 slots are empty.
- *
- * Solution: Use a CIRCULAR QUEUE (Part 2).
- *
- * We include this simple version to show WHY circular queues exist.
  */
 
 #define MAX_SIZE 100
 
-struct SimpleQueue {
+
+/* ============================================
+ *  PART 1: LINEAR (SIMPLE) QUEUE — ARRAY
+ * ============================================ */
+
+struct LinearQueueArray {
     int arr[MAX_SIZE];
-    int front;      // index of the front element
-    int rear;       // index of the rear element
+    int front;
+    int rear;
 };
 
-/*
- * Initialise the simple queue.
- * front = -1, rear = -1 means the queue is empty.
- */
-void initSimpleQueue(struct SimpleQueue* q) {
+void initLinearArray(struct LinearQueueArray* q) {
     q->front = -1;
     q->rear = -1;
 }
 
-int isEmptySimple(struct SimpleQueue* q) {
+int isEmptyLinearArray(struct LinearQueueArray* q) {
     return q->front == -1;
 }
 
-/*
- * isFull for a simple queue: rear has reached the last index.
- * Note the flaw — even if front > 0 (meaning we've dequeued from the front),
- * those slots are wasted.
- */
-int isFullSimple(struct SimpleQueue* q) {
+int isFullLinearArray(struct LinearQueueArray* q) {
     return q->rear == MAX_SIZE - 1;
 }
 
-/*
- * Enqueue: Add an element at the rear.
- *
- * Steps:
- *   1. Check if full.
- *   2. If queue was empty (front == -1), set front = 0.
- *   3. Increment rear.
- *   4. Store the value at arr[rear].
- *
- * Time: O(1).
- */
-void enqueueSimple(struct SimpleQueue* q, int value) {
-    if (isFullSimple(q)) {
-        printf("Queue Overflow! Cannot enqueue %d.\n", value);
+void enqueueLinearArray(struct LinearQueueArray* q, int value) {
+    if (isFullLinearArray(q)) {
+        printf("Linear Queue (Array) Overflow! Cannot enqueue %d.\n", value);
         return;
     }
     if (q->front == -1) {
-        q->front = 0;      // first element — set front to 0
+        q->front = 0;
     }
     q->rear++;
     q->arr[q->rear] = value;
     printf("Enqueued %d.\n", value);
 }
 
-/*
- * Dequeue: Remove and return the front element.
- *
- * Steps:
- *   1. Check if empty.
- *   2. Read the value at arr[front].
- *   3. If front == rear (last element), reset both to -1 (queue becomes empty).
- *   4. Otherwise, increment front.
- *
- * The problem: index 'front' moves FORWARD, and the space behind it is wasted.
- *
- * Time: O(1).
- */
-int dequeueSimple(struct SimpleQueue* q) {
-    if (isEmptySimple(q)) {
-        printf("Queue Underflow! Cannot dequeue.\n");
+int dequeueLinearArray(struct LinearQueueArray* q) {
+    if (isEmptyLinearArray(q)) {
+        printf("Linear Queue (Array) Underflow!\n");
         return -1;
     }
     int value = q->arr[q->front];
     if (q->front == q->rear) {
-        // Last element — queue becomes empty
         q->front = -1;
         q->rear = -1;
     } else {
-        q->front++;     // move front forward (wastes the old slot)
+        q->front++;
     }
     return value;
 }
 
-int peekSimple(struct SimpleQueue* q) {
-    if (isEmptySimple(q)) {
-        printf("Queue is empty!\n");
+int peekLinearArray(struct LinearQueueArray* q) {
+    if (isEmptyLinearArray(q)) {
+        printf("Linear Queue (Array) is empty!\n");
         return -1;
     }
     return q->arr[q->front];
 }
 
-void displaySimple(struct SimpleQueue* q) {
-    if (isEmptySimple(q)) {
-        printf("Queue is empty!\n");
+void displayLinearArray(struct LinearQueueArray* q) {
+    if (isEmptyLinearArray(q)) {
+        printf("Linear Queue (Array) is empty!\n");
         return;
     }
-    printf("Queue (front → rear): ");
+    printf("Linear Queue (Array) (front -> rear): ");
     for (int i = q->front; i <= q->rear; i++) {
         printf("%d", q->arr[i]);
         if (i < q->rear) printf(" | ");
@@ -164,185 +103,31 @@ void displaySimple(struct SimpleQueue* q) {
 }
 
 
-/* ===================================
- *  PART 2: CIRCULAR QUEUE (Array)
- * =================================== */
+/* ===================================================
+ *  PART 2: LINEAR (SIMPLE) QUEUE — LINKED LIST
+ * =================================================== */
 
-/*
- * A Circular Queue solves the "wasted space" problem of a simple queue.
- *
- * Instead of treating the array as linear, we treat it as CIRCULAR:
- * when rear reaches the end of the array, it wraps around to index 0.
- *
- * This is achieved using the MODULO operator:
- *   next index = (current index + 1) % MAX_SIZE
- *
- * Visually (MAX=5):
- *   Linear view:  [0] [1] [2] [3] [4]
- *   Circular view: after index 4, we wrap to index 0.
- *
- * Example:
- *   After enqueue(10,20,30,40,50): front=0, rear=4, FULL
- *   Dequeue 3 times: front=3, rear=4
- *   Enqueue(60): rear = (4+1)%5 = 0 → arr[0] = 60
- *   Enqueue(70): rear = (0+1)%5 = 1 → arr[1] = 70
- *   Now: arr = [60, 70, _, 40, 50], front=3, rear=1 — space is REUSED!
- *
- * Full condition:  (rear + 1) % MAX == front
- *   This sacrifices ONE slot (can store MAX-1 elements) to distinguish
- *   full from empty. Alternative: use a count variable.
- *
- * Empty condition: front == -1  (or count == 0 if using count)
- */
-
-struct CircularQueue {
-    int arr[MAX_SIZE];
-    int front;
-    int rear;
-    int count;      // track number of elements (avoids the 1-slot sacrifice)
-};
-
-void initCircularQueue(struct CircularQueue* q) {
-    q->front = 0;
-    q->rear = -1;
-    q->count = 0;
-}
-
-int isEmptyCircular(struct CircularQueue* q) {
-    return q->count == 0;
-}
-
-int isFullCircular(struct CircularQueue* q) {
-    return q->count == MAX_SIZE;
-}
-
-/*
- * Circular Enqueue: Add element at rear, wrapping around if needed.
- *
- * Steps:
- *   1. Check if full.
- *   2. rear = (rear + 1) % MAX_SIZE   → wrap around
- *   3. Store value at arr[rear].
- *   4. Increment count.
- *
- * The modulo operation is the KEY to circularity.
- * When rear is at MAX_SIZE-1: (MAX_SIZE-1 + 1) % MAX_SIZE = 0 → wraps to front!
- */
-void enqueueCircular(struct CircularQueue* q, int value) {
-    if (isFullCircular(q)) {
-        printf("Circular Queue Overflow! Cannot enqueue %d.\n", value);
-        return;
-    }
-    q->rear = (q->rear + 1) % MAX_SIZE;    // wrap around
-    q->arr[q->rear] = value;
-    q->count++;
-    printf("Enqueued %d.\n", value);
-}
-
-/*
- * Circular Dequeue: Remove and return front element, wrapping around if needed.
- *
- * Steps:
- *   1. Check if empty.
- *   2. Read value at arr[front].
- *   3. front = (front + 1) % MAX_SIZE   → wrap around
- *   4. Decrement count.
- *
- * Unlike the simple queue, the dequeued slot WILL be reused when rear wraps.
- */
-int dequeueCircular(struct CircularQueue* q) {
-    if (isEmptyCircular(q)) {
-        printf("Circular Queue Underflow! Cannot dequeue.\n");
-        return -1;
-    }
-    int value = q->arr[q->front];
-    q->front = (q->front + 1) % MAX_SIZE;  // wrap around
-    q->count--;
-    return value;
-}
-
-int peekCircular(struct CircularQueue* q) {
-    if (isEmptyCircular(q)) {
-        printf("Circular queue is empty!\n");
-        return -1;
-    }
-    return q->arr[q->front];
-}
-
-void displayCircular(struct CircularQueue* q) {
-    if (isEmptyCircular(q)) {
-        printf("Circular queue is empty!\n");
-        return;
-    }
-    printf("Circular Queue (front → rear): ");
-    int idx = q->front;
-    for (int i = 0; i < q->count; i++) {
-        printf("%d", q->arr[idx]);
-        if (i < q->count - 1) printf(" | ");
-        idx = (idx + 1) % MAX_SIZE;    // wrap around during display too
-    }
-    printf("\n");
-    printf("Size: %d / %d\n", q->count, MAX_SIZE);
-}
-
-
-/* =======================================
- *  PART 3: LINKED-LIST-BASED QUEUE
- * ======================================= */
-
-/*
- * Linked-list queue uses two pointers: front and rear.
- *   - front: points to the first node (dequeue happens here)
- *   - rear:  points to the last node  (enqueue happens here)
- *
- * Why two pointers?
- *   - Enqueue at rear: rear->next = newNode; rear = newNode;  → O(1)
- *   - Dequeue at front: temp = front; front = front->next; free(temp); → O(1)
- *
- * If we only had one pointer:
- *   - With only front: enqueue would be O(n) (traverse to end)
- *   - With only rear: dequeue would be O(n) (traverse to second-to-last)
- *
- * Advantages:
- *   - Dynamic size — no overflow (unless system memory runs out)
- *   - No wasted space
- *
- * Disadvantages:
- *   - Extra memory for pointers
- *   - Not cache-friendly
- */
-
-struct QueueNode {
+struct LinearNode {
     int data;
-    struct QueueNode* next;
+    struct LinearNode* next;
 };
 
-struct LinkedQueue {
-    struct QueueNode* front;
-    struct QueueNode* rear;
+struct LinearQueueLinked {
+    struct LinearNode* front;
+    struct LinearNode* rear;
 };
 
-void initLinkedQueue(struct LinkedQueue* q) {
+void initLinearLinked(struct LinearQueueLinked* q) {
     q->front = NULL;
     q->rear = NULL;
 }
 
-int isEmptyLinked(struct LinkedQueue* q) {
+int isEmptyLinearLinked(struct LinearQueueLinked* q) {
     return q->front == NULL;
 }
 
-/*
- * Linked Enqueue: Add a new node at the rear.
- *
- * Steps:
- *   1. Create a new node.
- *   2. If queue is empty: front = rear = newNode.
- *   3. Otherwise: rear->next = newNode; rear = newNode.
- *
- * Time: O(1).
- */
-void enqueueLinked(struct LinkedQueue* q, int value) {
-    struct QueueNode* newNode = (struct QueueNode*)malloc(sizeof(struct QueueNode));
+void enqueueLinearLinked(struct LinearQueueLinked* q, int value) {
+    struct LinearNode* newNode = (struct LinearNode*)malloc(sizeof(struct LinearNode));
     if (newNode == NULL) {
         printf("Memory allocation failed!\n");
         return;
@@ -350,60 +135,48 @@ void enqueueLinked(struct LinkedQueue* q, int value) {
     newNode->data = value;
     newNode->next = NULL;
 
-    if (isEmptyLinked(q)) {
+    if (isEmptyLinearLinked(q)) {
         q->front = newNode;
         q->rear = newNode;
     } else {
-        q->rear->next = newNode;    // old rear points to new node
-        q->rear = newNode;          // rear moves to new node
+        q->rear->next = newNode;
+        q->rear = newNode;
     }
     printf("Enqueued %d.\n", value);
 }
 
-/*
- * Linked Dequeue: Remove the front node.
- *
- * Steps:
- *   1. Check if empty.
- *   2. Save front in temp.
- *   3. front = front->next.
- *   4. If front becomes NULL, also set rear = NULL (queue is empty).
- *   5. Free temp.
- *
- * Time: O(1).
- */
-int dequeueLinked(struct LinkedQueue* q) {
-    if (isEmptyLinked(q)) {
-        printf("Queue Underflow!\n");
+int dequeueLinearLinked(struct LinearQueueLinked* q) {
+    if (isEmptyLinearLinked(q)) {
+        printf("Linear Queue (Linked List) Underflow!\n");
         return -1;
     }
-    struct QueueNode* temp = q->front;
+    struct LinearNode* temp = q->front;
     int value = temp->data;
     q->front = q->front->next;
 
     if (q->front == NULL) {
-        q->rear = NULL;     // queue is now empty
+        q->rear = NULL;
     }
 
     free(temp);
     return value;
 }
 
-int peekLinked(struct LinkedQueue* q) {
-    if (isEmptyLinked(q)) {
-        printf("Queue is empty!\n");
+int peekLinearLinked(struct LinearQueueLinked* q) {
+    if (isEmptyLinearLinked(q)) {
+        printf("Linear Queue (Linked List) is empty!\n");
         return -1;
     }
     return q->front->data;
 }
 
-void displayLinked(struct LinkedQueue* q) {
-    if (isEmptyLinked(q)) {
-        printf("Queue is empty!\n");
+void displayLinearLinked(struct LinearQueueLinked* q) {
+    if (isEmptyLinearLinked(q)) {
+        printf("Linear Queue (Linked List) is empty!\n");
         return;
     }
-    printf("Queue (front → rear): ");
-    struct QueueNode* temp = q->front;
+    printf("Linear Queue (Linked List) (front -> rear): ");
+    struct LinearNode* temp = q->front;
     while (temp != NULL) {
         printf("%d", temp->data);
         if (temp->next != NULL) printf(" | ");
@@ -412,84 +185,224 @@ void displayLinked(struct LinkedQueue* q) {
     printf("\n");
 }
 
+void freeLinearLinked(struct LinearQueueLinked* q) {
+    while (q->front != NULL) {
+        struct LinearNode* temp = q->front;
+        q->front = q->front->next;
+        free(temp);
+    }
+    q->rear = NULL;
+}
+
 
 /* ====================================
- *  PART 4: DEQUE (Double-Ended Queue)
+ *  PART 3: CIRCULAR QUEUE — ARRAY
  * ==================================== */
 
-/*
- * A Deque (Double-Ended Queue, pronounced "deck") allows insertion
- * and deletion at BOTH ends — front AND rear.
- *
- * Operations:
- *   - insertFront(x)  : add at front
- *   - insertRear(x)   : add at rear
- *   - deleteFront()   : remove from front
- *   - deleteRear()    : remove from rear
- *
- * A deque can act as:
- *   - A STACK    (push/pop from the same end)
- *   - A QUEUE    (enqueue at rear, dequeue from front)
- *   - BOTH at the same time
- *
- * Implementation: Circular array (same wrapping technique as circular queue).
- *
- * Real uses:
- *   - Sliding window maximum/minimum (LeetCode #239)
- *   - Work-stealing schedulers (threads steal from the back of another's deque)
- *   - Palindrome checking
- *   - Browser history with tab groups
- */
-
-struct Deque {
+struct CircularQueueArray {
     int arr[MAX_SIZE];
     int front;
     int rear;
     int count;
 };
 
-void initDeque(struct Deque* d) {
+void initCircularArray(struct CircularQueueArray* q) {
+    q->front = 0;
+    q->rear = -1;
+    q->count = 0;
+}
+
+int isEmptyCircularArray(struct CircularQueueArray* q) {
+    return q->count == 0;
+}
+
+int isFullCircularArray(struct CircularQueueArray* q) {
+    return q->count == MAX_SIZE;
+}
+
+void enqueueCircularArray(struct CircularQueueArray* q, int value) {
+    if (isFullCircularArray(q)) {
+        printf("Circular Queue (Array) Overflow!\n");
+        return;
+    }
+    q->rear = (q->rear + 1) % MAX_SIZE;
+    q->arr[q->rear] = value;
+    q->count++;
+    printf("Enqueued %d.\n", value);
+}
+
+int dequeueCircularArray(struct CircularQueueArray* q) {
+    if (isEmptyCircularArray(q)) {
+        printf("Circular Queue (Array) Underflow!\n");
+        return -1;
+    }
+    int value = q->arr[q->front];
+    q->front = (q->front + 1) % MAX_SIZE;
+    q->count--;
+    return value;
+}
+
+int peekCircularArray(struct CircularQueueArray* q) {
+    if (isEmptyCircularArray(q)) {
+        printf("Circular Queue (Array) is empty!\n");
+        return -1;
+    }
+    return q->arr[q->front];
+}
+
+void displayCircularArray(struct CircularQueueArray* q) {
+    if (isEmptyCircularArray(q)) {
+        printf("Circular Queue (Array) is empty!\n");
+        return;
+    }
+    printf("Circular Queue (Array) (front -> rear): ");
+    int idx = q->front;
+    for (int i = 0; i < q->count; i++) {
+        printf("%d", q->arr[idx]);
+        if (i < q->count - 1) printf(" | ");
+        idx = (idx + 1) % MAX_SIZE;
+    }
+    printf("\n");
+}
+
+
+/* ==========================================
+ *  PART 4: CIRCULAR QUEUE — LINKED LIST
+ * ========================================== */
+
+/*
+ * We keep a rear pointer.
+ * front is rear->next when queue is non-empty.
+ */
+struct CircularNode {
+    int data;
+    struct CircularNode* next;
+};
+
+struct CircularQueueLinked {
+    struct CircularNode* rear;
+    int count;
+};
+
+void initCircularLinked(struct CircularQueueLinked* q) {
+    q->rear = NULL;
+    q->count = 0;
+}
+
+int isEmptyCircularLinked(struct CircularQueueLinked* q) {
+    return q->rear == NULL;
+}
+
+void enqueueCircularLinked(struct CircularQueueLinked* q, int value) {
+    struct CircularNode* newNode = (struct CircularNode*)malloc(sizeof(struct CircularNode));
+    if (newNode == NULL) {
+        printf("Memory allocation failed!\n");
+        return;
+    }
+    newNode->data = value;
+
+    if (isEmptyCircularLinked(q)) {
+        newNode->next = newNode;
+        q->rear = newNode;
+    } else {
+        newNode->next = q->rear->next;
+        q->rear->next = newNode;
+        q->rear = newNode;
+    }
+    q->count++;
+    printf("Enqueued %d.\n", value);
+}
+
+int dequeueCircularLinked(struct CircularQueueLinked* q) {
+    if (isEmptyCircularLinked(q)) {
+        printf("Circular Queue (Linked List) Underflow!\n");
+        return -1;
+    }
+
+    struct CircularNode* front = q->rear->next;
+    int value = front->data;
+
+    if (front == q->rear) {
+        q->rear = NULL;
+    } else {
+        q->rear->next = front->next;
+    }
+
+    free(front);
+    q->count--;
+    return value;
+}
+
+int peekCircularLinked(struct CircularQueueLinked* q) {
+    if (isEmptyCircularLinked(q)) {
+        printf("Circular Queue (Linked List) is empty!\n");
+        return -1;
+    }
+    return q->rear->next->data;
+}
+
+void displayCircularLinked(struct CircularQueueLinked* q) {
+    if (isEmptyCircularLinked(q)) {
+        printf("Circular Queue (Linked List) is empty!\n");
+        return;
+    }
+
+    printf("Circular Queue (Linked List) (front -> rear): ");
+    struct CircularNode* temp = q->rear->next;
+    for (int i = 0; i < q->count; i++) {
+        printf("%d", temp->data);
+        if (i < q->count - 1) printf(" | ");
+        temp = temp->next;
+    }
+    printf("\n");
+}
+
+void freeCircularLinked(struct CircularQueueLinked* q) {
+    while (!isEmptyCircularLinked(q)) {
+        dequeueCircularLinked(q);
+    }
+}
+
+
+/* ====================================
+ *  PART 5: DEQUE — ARRAY
+ * ==================================== */
+
+struct DequeArray {
+    int arr[MAX_SIZE];
+    int front;
+    int rear;
+    int count;
+};
+
+void initDequeArray(struct DequeArray* d) {
     d->front = 0;
-    d->rear = -1;
+    d->rear = MAX_SIZE - 1;
     d->count = 0;
 }
 
-int isEmptyDeque(struct Deque* d) {
+int isEmptyDequeArray(struct DequeArray* d) {
     return d->count == 0;
 }
 
-int isFullDeque(struct Deque* d) {
+int isFullDequeArray(struct DequeArray* d) {
     return d->count == MAX_SIZE;
 }
 
-/*
- * Insert at front: move front BACKWARD (with wrap) and store.
- *
- * front = (front - 1 + MAX_SIZE) % MAX_SIZE
- *
- * Why "+ MAX_SIZE"?
- *   If front is 0, (0 - 1) = -1, and -1 % MAX_SIZE is implementation-defined in C.
- *   Adding MAX_SIZE first ensures the result is always positive:
- *   (0 - 1 + 100) % 100 = 99 → wraps to the end of the array.
- */
-void insertFront(struct Deque* d, int value) {
-    if (isFullDeque(d)) {
-        printf("Deque Overflow!\n");
+void insertFrontArray(struct DequeArray* d, int value) {
+    if (isFullDequeArray(d)) {
+        printf("Deque (Array) Overflow!\n");
         return;
     }
-    d->front = (d->front - 1 + MAX_SIZE) % MAX_SIZE;   // move front backward
+    d->front = (d->front - 1 + MAX_SIZE) % MAX_SIZE;
     d->arr[d->front] = value;
     d->count++;
     printf("Inserted %d at front.\n", value);
 }
 
-/*
- * Insert at rear: move rear FORWARD (with wrap) and store.
- * Same as circular queue enqueue.
- */
-void insertRear(struct Deque* d, int value) {
-    if (isFullDeque(d)) {
-        printf("Deque Overflow!\n");
+void insertRearArray(struct DequeArray* d, int value) {
+    if (isFullDequeArray(d)) {
+        printf("Deque (Array) Overflow!\n");
         return;
     }
     d->rear = (d->rear + 1) % MAX_SIZE;
@@ -498,13 +411,9 @@ void insertRear(struct Deque* d, int value) {
     printf("Inserted %d at rear.\n", value);
 }
 
-/*
- * Delete from front: read arr[front], move front FORWARD (with wrap).
- * Same as circular queue dequeue.
- */
-int deleteFront(struct Deque* d) {
-    if (isEmptyDeque(d)) {
-        printf("Deque Underflow!\n");
+int deleteFrontArray(struct DequeArray* d) {
+    if (isEmptyDequeArray(d)) {
+        printf("Deque (Array) Underflow!\n");
         return -1;
     }
     int value = d->arr[d->front];
@@ -513,13 +422,9 @@ int deleteFront(struct Deque* d) {
     return value;
 }
 
-/*
- * Delete from rear: read arr[rear], move rear BACKWARD (with wrap).
- * This is what makes deque special — you can "pop" from the back too.
- */
-int deleteRear(struct Deque* d) {
-    if (isEmptyDeque(d)) {
-        printf("Deque Underflow!\n");
+int deleteRearArray(struct DequeArray* d) {
+    if (isEmptyDequeArray(d)) {
+        printf("Deque (Array) Underflow!\n");
         return -1;
     }
     int value = d->arr[d->rear];
@@ -528,28 +433,28 @@ int deleteRear(struct Deque* d) {
     return value;
 }
 
-int peekFrontDeque(struct Deque* d) {
-    if (isEmptyDeque(d)) {
-        printf("Deque is empty!\n");
+int peekFrontDequeArray(struct DequeArray* d) {
+    if (isEmptyDequeArray(d)) {
+        printf("Deque (Array) is empty!\n");
         return -1;
     }
     return d->arr[d->front];
 }
 
-int peekRearDeque(struct Deque* d) {
-    if (isEmptyDeque(d)) {
-        printf("Deque is empty!\n");
+int peekRearDequeArray(struct DequeArray* d) {
+    if (isEmptyDequeArray(d)) {
+        printf("Deque (Array) is empty!\n");
         return -1;
     }
     return d->arr[d->rear];
 }
 
-void displayDeque(struct Deque* d) {
-    if (isEmptyDeque(d)) {
-        printf("Deque is empty!\n");
+void displayDequeArray(struct DequeArray* d) {
+    if (isEmptyDequeArray(d)) {
+        printf("Deque (Array) is empty!\n");
         return;
     }
-    printf("Deque (front → rear): ");
+    printf("Deque (Array) (front -> rear): ");
     int idx = d->front;
     for (int i = 0; i < d->count; i++) {
         printf("%d", d->arr[idx]);
@@ -560,59 +465,184 @@ void displayDeque(struct Deque* d) {
 }
 
 
-/* =======================================
- *  PART 5: PRIORITY QUEUE (Array-Based)
- * ======================================= */
+/* ==========================================
+ *  PART 6: DEQUE — LINKED LIST
+ * ========================================== */
+
+struct DequeNode {
+    int data;
+    struct DequeNode* prev;
+    struct DequeNode* next;
+};
+
+struct DequeLinked {
+    struct DequeNode* front;
+    struct DequeNode* rear;
+    int count;
+};
+
+void initDequeLinked(struct DequeLinked* d) {
+    d->front = NULL;
+    d->rear = NULL;
+    d->count = 0;
+}
+
+int isEmptyDequeLinked(struct DequeLinked* d) {
+    return d->front == NULL;
+}
+
+void insertFrontLinked(struct DequeLinked* d, int value) {
+    struct DequeNode* newNode = (struct DequeNode*)malloc(sizeof(struct DequeNode));
+    if (newNode == NULL) {
+        printf("Memory allocation failed!\n");
+        return;
+    }
+    newNode->data = value;
+    newNode->prev = NULL;
+    newNode->next = d->front;
+
+    if (isEmptyDequeLinked(d)) {
+        d->front = newNode;
+        d->rear = newNode;
+    } else {
+        d->front->prev = newNode;
+        d->front = newNode;
+    }
+    d->count++;
+    printf("Inserted %d at front.\n", value);
+}
+
+void insertRearLinked(struct DequeLinked* d, int value) {
+    struct DequeNode* newNode = (struct DequeNode*)malloc(sizeof(struct DequeNode));
+    if (newNode == NULL) {
+        printf("Memory allocation failed!\n");
+        return;
+    }
+    newNode->data = value;
+    newNode->next = NULL;
+    newNode->prev = d->rear;
+
+    if (isEmptyDequeLinked(d)) {
+        d->front = newNode;
+        d->rear = newNode;
+    } else {
+        d->rear->next = newNode;
+        d->rear = newNode;
+    }
+    d->count++;
+    printf("Inserted %d at rear.\n", value);
+}
+
+int deleteFrontLinked(struct DequeLinked* d) {
+    if (isEmptyDequeLinked(d)) {
+        printf("Deque (Linked List) Underflow!\n");
+        return -1;
+    }
+    struct DequeNode* temp = d->front;
+    int value = temp->data;
+    d->front = d->front->next;
+
+    if (d->front == NULL) {
+        d->rear = NULL;
+    } else {
+        d->front->prev = NULL;
+    }
+
+    free(temp);
+    d->count--;
+    return value;
+}
+
+int deleteRearLinked(struct DequeLinked* d) {
+    if (isEmptyDequeLinked(d)) {
+        printf("Deque (Linked List) Underflow!\n");
+        return -1;
+    }
+    struct DequeNode* temp = d->rear;
+    int value = temp->data;
+    d->rear = d->rear->prev;
+
+    if (d->rear == NULL) {
+        d->front = NULL;
+    } else {
+        d->rear->next = NULL;
+    }
+
+    free(temp);
+    d->count--;
+    return value;
+}
+
+int peekFrontDequeLinked(struct DequeLinked* d) {
+    if (isEmptyDequeLinked(d)) {
+        printf("Deque (Linked List) is empty!\n");
+        return -1;
+    }
+    return d->front->data;
+}
+
+int peekRearDequeLinked(struct DequeLinked* d) {
+    if (isEmptyDequeLinked(d)) {
+        printf("Deque (Linked List) is empty!\n");
+        return -1;
+    }
+    return d->rear->data;
+}
+
+void displayDequeLinked(struct DequeLinked* d) {
+    if (isEmptyDequeLinked(d)) {
+        printf("Deque (Linked List) is empty!\n");
+        return;
+    }
+    printf("Deque (Linked List) (front -> rear): ");
+    struct DequeNode* temp = d->front;
+    while (temp != NULL) {
+        printf("%d", temp->data);
+        if (temp->next != NULL) printf(" | ");
+        temp = temp->next;
+    }
+    printf("\n");
+}
+
+void freeDequeLinked(struct DequeLinked* d) {
+    while (d->front != NULL) {
+        struct DequeNode* temp = d->front;
+        d->front = d->front->next;
+        free(temp);
+    }
+    d->rear = NULL;
+    d->count = 0;
+}
+
+
+/* ====================================
+ *  PART 7: PRIORITY QUEUE — ARRAY
+ * ==================================== */
 
 /*
- * A Priority Queue is a queue where each element has a PRIORITY.
- * Elements with HIGHER priority are dequeued FIRST, regardless of
- * their insertion order. (Not strictly FIFO.)
- *
- * This is a BASIC array-based implementation. In practice, priority
- * queues are implemented using HEAPS (binary heap) for O(log n)
- * insert/delete. This array version is O(n) — included here for
- * understanding the concept.
- *
- * Real uses:
- *   - Dijkstra's shortest path algorithm (needs efficient priority queue)
- *   - Prim's minimum spanning tree
- *   - CPU scheduling (higher-priority processes run first)
- *   - Huffman coding (data compression)
- *   - A* pathfinding
- *   - Event-driven simulation
- *
- * Two types:
- *   - MIN priority queue: smallest value = highest priority (dequeued first)
- *   - MAX priority queue: largest value = highest priority
- *
- * We implement MIN priority queue here (common in graph algorithms).
+ * MIN Priority Queue:
+ * Smaller value => Higher priority.
  */
-
-struct PriorityQueue {
+struct PriorityQueueArray {
     int arr[MAX_SIZE];
     int size;
 };
 
-void initPriorityQueue(struct PriorityQueue* pq) {
+void initPriorityArray(struct PriorityQueueArray* pq) {
     pq->size = 0;
 }
 
-int isEmptyPQ(struct PriorityQueue* pq) {
+int isEmptyPriorityArray(struct PriorityQueueArray* pq) {
     return pq->size == 0;
 }
 
-int isFullPQ(struct PriorityQueue* pq) {
+int isFullPriorityArray(struct PriorityQueueArray* pq) {
     return pq->size == MAX_SIZE;
 }
 
-/*
- * Enqueue: Just add at the end. O(1).
- * (We don't sort on insert — we find the min on dequeue.)
- */
-void enqueuePQ(struct PriorityQueue* pq, int value) {
-    if (isFullPQ(pq)) {
-        printf("Priority Queue Overflow!\n");
+void enqueuePriorityArray(struct PriorityQueueArray* pq, int value) {
+    if (isFullPriorityArray(pq)) {
+        printf("Priority Queue (Array) Overflow!\n");
         return;
     }
     pq->arr[pq->size] = value;
@@ -620,25 +650,12 @@ void enqueuePQ(struct PriorityQueue* pq, int value) {
     printf("Enqueued %d with priority %d (lower = higher priority).\n", value, value);
 }
 
-/*
- * Dequeue: Find the element with the MINIMUM value (highest priority),
- * remove it, and shift remaining elements.
- *
- * THIS is the O(n) part. With a heap, this would be O(log n).
- *
- * Steps:
- *   1. Find the index of the minimum element.
- *   2. Save its value.
- *   3. Shift all elements after it left by one (to fill the gap).
- *   4. Decrement size.
- */
-int dequeuePQ(struct PriorityQueue* pq) {
-    if (isEmptyPQ(pq)) {
-        printf("Priority Queue Underflow!\n");
+int dequeuePriorityArray(struct PriorityQueueArray* pq) {
+    if (isEmptyPriorityArray(pq)) {
+        printf("Priority Queue (Array) Underflow!\n");
         return -1;
     }
 
-    // Find the minimum element
     int minIdx = 0;
     for (int i = 1; i < pq->size; i++) {
         if (pq->arr[i] < pq->arr[minIdx]) {
@@ -647,21 +664,19 @@ int dequeuePQ(struct PriorityQueue* pq) {
     }
 
     int value = pq->arr[minIdx];
-
-    // Shift elements to fill the gap
     for (int i = minIdx; i < pq->size - 1; i++) {
         pq->arr[i] = pq->arr[i + 1];
     }
     pq->size--;
-
     return value;
 }
 
-int peekPQ(struct PriorityQueue* pq) {
-    if (isEmptyPQ(pq)) {
-        printf("Priority Queue is empty!\n");
+int peekPriorityArray(struct PriorityQueueArray* pq) {
+    if (isEmptyPriorityArray(pq)) {
+        printf("Priority Queue (Array) is empty!\n");
         return -1;
     }
+
     int minIdx = 0;
     for (int i = 1; i < pq->size; i++) {
         if (pq->arr[i] < pq->arr[minIdx]) {
@@ -671,12 +686,12 @@ int peekPQ(struct PriorityQueue* pq) {
     return pq->arr[minIdx];
 }
 
-void displayPQ(struct PriorityQueue* pq) {
-    if (isEmptyPQ(pq)) {
-        printf("Priority Queue is empty!\n");
+void displayPriorityArray(struct PriorityQueueArray* pq) {
+    if (isEmptyPriorityArray(pq)) {
+        printf("Priority Queue (Array) is empty!\n");
         return;
     }
-    printf("Priority Queue: ");
+    printf("Priority Queue (Array): ");
     for (int i = 0; i < pq->size; i++) {
         printf("%d", pq->arr[i]);
         if (i < pq->size - 1) printf(" | ");
@@ -685,179 +700,389 @@ void displayPQ(struct PriorityQueue* pq) {
 }
 
 
+/* ==========================================
+ *  PART 8: PRIORITY QUEUE — LINKED LIST
+ * ========================================== */
+
+/*
+ * We keep list sorted in ascending order.
+ * Front always has highest priority (minimum value).
+ */
+struct PriorityNode {
+    int data;
+    struct PriorityNode* next;
+};
+
+struct PriorityQueueLinked {
+    struct PriorityNode* front;
+    int size;
+};
+
+void initPriorityLinked(struct PriorityQueueLinked* pq) {
+    pq->front = NULL;
+    pq->size = 0;
+}
+
+int isEmptyPriorityLinked(struct PriorityQueueLinked* pq) {
+    return pq->front == NULL;
+}
+
+void enqueuePriorityLinked(struct PriorityQueueLinked* pq, int value) {
+    struct PriorityNode* newNode = (struct PriorityNode*)malloc(sizeof(struct PriorityNode));
+    if (newNode == NULL) {
+        printf("Memory allocation failed!\n");
+        return;
+    }
+    newNode->data = value;
+    newNode->next = NULL;
+
+    if (isEmptyPriorityLinked(pq) || value < pq->front->data) {
+        newNode->next = pq->front;
+        pq->front = newNode;
+    } else {
+        struct PriorityNode* temp = pq->front;
+        while (temp->next != NULL && temp->next->data <= value) {
+            temp = temp->next;
+        }
+        newNode->next = temp->next;
+        temp->next = newNode;
+    }
+
+    pq->size++;
+    printf("Enqueued %d with priority %d (lower = higher priority).\n", value, value);
+}
+
+int dequeuePriorityLinked(struct PriorityQueueLinked* pq) {
+    if (isEmptyPriorityLinked(pq)) {
+        printf("Priority Queue (Linked List) Underflow!\n");
+        return -1;
+    }
+    struct PriorityNode* temp = pq->front;
+    int value = temp->data;
+    pq->front = pq->front->next;
+    free(temp);
+    pq->size--;
+    return value;
+}
+
+int peekPriorityLinked(struct PriorityQueueLinked* pq) {
+    if (isEmptyPriorityLinked(pq)) {
+        printf("Priority Queue (Linked List) is empty!\n");
+        return -1;
+    }
+    return pq->front->data;
+}
+
+void displayPriorityLinked(struct PriorityQueueLinked* pq) {
+    if (isEmptyPriorityLinked(pq)) {
+        printf("Priority Queue (Linked List) is empty!\n");
+        return;
+    }
+    printf("Priority Queue (Linked List): ");
+    struct PriorityNode* temp = pq->front;
+    while (temp != NULL) {
+        printf("%d", temp->data);
+        if (temp->next != NULL) printf(" | ");
+        temp = temp->next;
+    }
+    printf("\n");
+}
+
+void freePriorityLinked(struct PriorityQueueLinked* pq) {
+    while (pq->front != NULL) {
+        struct PriorityNode* temp = pq->front;
+        pq->front = pq->front->next;
+        free(temp);
+    }
+    pq->size = 0;
+}
+
+
 /* ============================================
- *  PART 6: MAIN MENU
+ *  PART 9: MAIN MENU
  * ============================================ */
 
 void displayMenu() {
-    printf("\n=============================================");
-    printf("\n           QUEUE OPERATIONS MENU");
-    printf("\n=============================================");
-    printf("\n --- Simple Queue ---");
-    printf("\n1.  Enqueue (Simple)");
-    printf("\n2.  Dequeue (Simple)");
-    printf("\n3.  Peek (Simple)");
-    printf("\n4.  Display (Simple)");
-    printf("\n --- Circular Queue ---");
-    printf("\n5.  Enqueue (Circular)");
-    printf("\n6.  Dequeue (Circular)");
-    printf("\n7.  Peek (Circular)");
-    printf("\n8.  Display (Circular)");
-    printf("\n --- Linked List Queue ---");
-    printf("\n9.  Enqueue (Linked List)");
-    printf("\n10. Dequeue (Linked List)");
-    printf("\n11. Peek (Linked List)");
-    printf("\n12. Display (Linked List)");
-    printf("\n --- Deque (Double-Ended Queue) ---");
-    printf("\n13. Insert at Front (Deque)");
-    printf("\n14. Insert at Rear (Deque)");
-    printf("\n15. Delete from Front (Deque)");
-    printf("\n16. Delete from Rear (Deque)");
-    printf("\n17. Display (Deque)");
-    printf("\n --- Priority Queue ---");
-    printf("\n18. Enqueue (Priority)");
-    printf("\n19. Dequeue (Priority)");
-    printf("\n20. Peek (Priority)");
-    printf("\n21. Display (Priority)");
-    printf("\n22. Exit");
-    printf("\n=============================================");
+    printf("\n============================================================");
+    printf("\n               QUEUE OPERATIONS MENU");
+    printf("\n============================================================");
+
+    printf("\n --- LINEAR (SIMPLE) QUEUE - ARRAY ---");
+    printf("\n1.  Enqueue (Linear Array)");
+    printf("\n2.  Dequeue (Linear Array)");
+    printf("\n3.  Peek (Linear Array)");
+    printf("\n4.  Display (Linear Array)");
+
+    printf("\n --- LINEAR (SIMPLE) QUEUE - LINKED LIST ---");
+    printf("\n5.  Enqueue (Linear Linked)");
+    printf("\n6.  Dequeue (Linear Linked)");
+    printf("\n7.  Peek (Linear Linked)");
+    printf("\n8.  Display (Linear Linked)");
+
+    printf("\n --- CIRCULAR QUEUE - ARRAY ---");
+    printf("\n9.  Enqueue (Circular Array)");
+    printf("\n10. Dequeue (Circular Array)");
+    printf("\n11. Peek (Circular Array)");
+    printf("\n12. Display (Circular Array)");
+
+    printf("\n --- CIRCULAR QUEUE - LINKED LIST ---");
+    printf("\n13. Enqueue (Circular Linked)");
+    printf("\n14. Dequeue (Circular Linked)");
+    printf("\n15. Peek (Circular Linked)");
+    printf("\n16. Display (Circular Linked)");
+
+    printf("\n --- DEQUE - ARRAY ---");
+    printf("\n17. Insert Front (Deque Array)");
+    printf("\n18. Insert Rear (Deque Array)");
+    printf("\n19. Delete Front (Deque Array)");
+    printf("\n20. Delete Rear (Deque Array)");
+    printf("\n21. Peek Front (Deque Array)");
+    printf("\n22. Peek Rear (Deque Array)");
+    printf("\n23. Display (Deque Array)");
+
+    printf("\n --- DEQUE - LINKED LIST ---");
+    printf("\n24. Insert Front (Deque Linked)");
+    printf("\n25. Insert Rear (Deque Linked)");
+    printf("\n26. Delete Front (Deque Linked)");
+    printf("\n27. Delete Rear (Deque Linked)");
+    printf("\n28. Peek Front (Deque Linked)");
+    printf("\n29. Peek Rear (Deque Linked)");
+    printf("\n30. Display (Deque Linked)");
+
+    printf("\n --- PRIORITY QUEUE - ARRAY ---");
+    printf("\n31. Enqueue (Priority Array)");
+    printf("\n32. Dequeue (Priority Array)");
+    printf("\n33. Peek (Priority Array)");
+    printf("\n34. Display (Priority Array)");
+
+    printf("\n --- PRIORITY QUEUE - LINKED LIST ---");
+    printf("\n35. Enqueue (Priority Linked)");
+    printf("\n36. Dequeue (Priority Linked)");
+    printf("\n37. Peek (Priority Linked)");
+    printf("\n38. Display (Priority Linked)");
+
+    printf("\n39. Exit");
+    printf("\n============================================================");
     printf("\nEnter your choice: ");
 }
 
 int main() {
     int choice, value;
 
-    // Initialise all queue types
-    struct SimpleQueue simpleQ;
-    initSimpleQueue(&simpleQ);
+    struct LinearQueueArray linearArray;
+    struct LinearQueueLinked linearLinked;
+    struct CircularQueueArray circularArray;
+    struct CircularQueueLinked circularLinked;
+    struct DequeArray dequeArray;
+    struct DequeLinked dequeLinked;
+    struct PriorityQueueArray priorityArray;
+    struct PriorityQueueLinked priorityLinked;
 
-    struct CircularQueue circularQ;
-    initCircularQueue(&circularQ);
-
-    struct LinkedQueue linkedQ;
-    initLinkedQueue(&linkedQ);
-
-    struct Deque deque;
-    initDeque(&deque);
-
-    struct PriorityQueue priorityQ;
-    initPriorityQueue(&priorityQ);
+    initLinearArray(&linearArray);
+    initLinearLinked(&linearLinked);
+    initCircularArray(&circularArray);
+    initCircularLinked(&circularLinked);
+    initDequeArray(&dequeArray);
+    initDequeLinked(&dequeLinked);
+    initPriorityArray(&priorityArray);
+    initPriorityLinked(&priorityLinked);
 
     printf("\n*** QUEUE OPERATIONS PROGRAM ***\n");
 
     while (1) {
         displayMenu();
-        scanf("%d", &choice);
+        if (scanf("%d", &choice) != 1) {
+            printf("\nInvalid input! Exiting program.\n");
+            break;
+        }
 
         switch (choice) {
-            // Simple Queue
+            /* Linear (Array) */
             case 1:
                 printf("\nEnter value to enqueue: ");
                 scanf("%d", &value);
-                enqueueSimple(&simpleQ, value);
+                enqueueLinearArray(&linearArray, value);
                 break;
             case 2:
-                value = dequeueSimple(&simpleQ);
+                value = dequeueLinearArray(&linearArray);
                 if (value != -1) printf("Dequeued: %d\n", value);
                 break;
             case 3:
-                value = peekSimple(&simpleQ);
+                value = peekLinearArray(&linearArray);
                 if (value != -1) printf("Front element: %d\n", value);
                 break;
             case 4:
-                displaySimple(&simpleQ);
+                displayLinearArray(&linearArray);
                 break;
 
-            // Circular Queue
+            /* Linear (Linked List) */
             case 5:
                 printf("\nEnter value to enqueue: ");
                 scanf("%d", &value);
-                enqueueCircular(&circularQ, value);
+                enqueueLinearLinked(&linearLinked, value);
                 break;
             case 6:
-                value = dequeueCircular(&circularQ);
+                value = dequeueLinearLinked(&linearLinked);
                 if (value != -1) printf("Dequeued: %d\n", value);
                 break;
             case 7:
-                value = peekCircular(&circularQ);
+                value = peekLinearLinked(&linearLinked);
                 if (value != -1) printf("Front element: %d\n", value);
                 break;
             case 8:
-                displayCircular(&circularQ);
+                displayLinearLinked(&linearLinked);
                 break;
 
-            // Linked List Queue
+            /* Circular (Array) */
             case 9:
                 printf("\nEnter value to enqueue: ");
                 scanf("%d", &value);
-                enqueueLinked(&linkedQ, value);
+                enqueueCircularArray(&circularArray, value);
                 break;
             case 10:
-                value = dequeueLinked(&linkedQ);
+                value = dequeueCircularArray(&circularArray);
                 if (value != -1) printf("Dequeued: %d\n", value);
                 break;
             case 11:
-                value = peekLinked(&linkedQ);
+                value = peekCircularArray(&circularArray);
                 if (value != -1) printf("Front element: %d\n", value);
                 break;
             case 12:
-                displayLinked(&linkedQ);
+                displayCircularArray(&circularArray);
                 break;
 
-            // Deque
+            /* Circular (Linked List) */
             case 13:
-                printf("\nEnter value to insert at front: ");
+                printf("\nEnter value to enqueue: ");
                 scanf("%d", &value);
-                insertFront(&deque, value);
+                enqueueCircularLinked(&circularLinked, value);
                 break;
             case 14:
-                printf("\nEnter value to insert at rear: ");
-                scanf("%d", &value);
-                insertRear(&deque, value);
+                value = dequeueCircularLinked(&circularLinked);
+                if (value != -1) printf("Dequeued: %d\n", value);
                 break;
             case 15:
-                value = deleteFront(&deque);
-                if (value != -1) printf("Deleted from front: %d\n", value);
+                value = peekCircularLinked(&circularLinked);
+                if (value != -1) printf("Front element: %d\n", value);
                 break;
             case 16:
-                value = deleteRear(&deque);
-                if (value != -1) printf("Deleted from rear: %d\n", value);
-                break;
-            case 17:
-                displayDeque(&deque);
+                displayCircularLinked(&circularLinked);
                 break;
 
-            // Priority Queue
-            case 18:
-                printf("\nEnter value (value = priority, lower = higher): ");
+            /* Deque (Array) */
+            case 17:
+                printf("\nEnter value to insert at front: ");
                 scanf("%d", &value);
-                enqueuePQ(&priorityQ, value);
+                insertFrontArray(&dequeArray, value);
+                break;
+            case 18:
+                printf("\nEnter value to insert at rear: ");
+                scanf("%d", &value);
+                insertRearArray(&dequeArray, value);
                 break;
             case 19:
-                value = dequeuePQ(&priorityQ);
-                if (value != -1) printf("Dequeued highest priority: %d\n", value);
+                value = deleteFrontArray(&dequeArray);
+                if (value != -1) printf("Deleted from front: %d\n", value);
                 break;
             case 20:
-                value = peekPQ(&priorityQ);
-                if (value != -1) printf("Highest priority element: %d\n", value);
+                value = deleteRearArray(&dequeArray);
+                if (value != -1) printf("Deleted from rear: %d\n", value);
                 break;
             case 21:
-                displayPQ(&priorityQ);
+                value = peekFrontDequeArray(&dequeArray);
+                if (value != -1) printf("Front element: %d\n", value);
+                break;
+            case 22:
+                value = peekRearDequeArray(&dequeArray);
+                if (value != -1) printf("Rear element: %d\n", value);
+                break;
+            case 23:
+                displayDequeArray(&dequeArray);
                 break;
 
-            case 22:
+            /* Deque (Linked List) */
+            case 24:
+                printf("\nEnter value to insert at front: ");
+                scanf("%d", &value);
+                insertFrontLinked(&dequeLinked, value);
+                break;
+            case 25:
+                printf("\nEnter value to insert at rear: ");
+                scanf("%d", &value);
+                insertRearLinked(&dequeLinked, value);
+                break;
+            case 26:
+                value = deleteFrontLinked(&dequeLinked);
+                if (value != -1) printf("Deleted from front: %d\n", value);
+                break;
+            case 27:
+                value = deleteRearLinked(&dequeLinked);
+                if (value != -1) printf("Deleted from rear: %d\n", value);
+                break;
+            case 28:
+                value = peekFrontDequeLinked(&dequeLinked);
+                if (value != -1) printf("Front element: %d\n", value);
+                break;
+            case 29:
+                value = peekRearDequeLinked(&dequeLinked);
+                if (value != -1) printf("Rear element: %d\n", value);
+                break;
+            case 30:
+                displayDequeLinked(&dequeLinked);
+                break;
+
+            /* Priority (Array) */
+            case 31:
+                printf("\nEnter value (lower value = higher priority): ");
+                scanf("%d", &value);
+                enqueuePriorityArray(&priorityArray, value);
+                break;
+            case 32:
+                value = dequeuePriorityArray(&priorityArray);
+                if (value != -1) printf("Dequeued highest priority: %d\n", value);
+                break;
+            case 33:
+                value = peekPriorityArray(&priorityArray);
+                if (value != -1) printf("Highest priority element: %d\n", value);
+                break;
+            case 34:
+                displayPriorityArray(&priorityArray);
+                break;
+
+            /* Priority (Linked List) */
+            case 35:
+                printf("\nEnter value (lower value = higher priority): ");
+                scanf("%d", &value);
+                enqueuePriorityLinked(&priorityLinked, value);
+                break;
+            case 36:
+                value = dequeuePriorityLinked(&priorityLinked);
+                if (value != -1) printf("Dequeued highest priority: %d\n", value);
+                break;
+            case 37:
+                value = peekPriorityLinked(&priorityLinked);
+                if (value != -1) printf("Highest priority element: %d\n", value);
+                break;
+            case 38:
+                displayPriorityLinked(&priorityLinked);
+                break;
+
+            case 39:
                 printf("\nExiting program. Goodbye!\n");
-                // Free linked queue nodes
-                while (linkedQ.front != NULL) {
-                    struct QueueNode* temp = linkedQ.front;
-                    linkedQ.front = linkedQ.front->next;
-                    free(temp);
-                }
-                exit(0);
+                freeLinearLinked(&linearLinked);
+                freeCircularLinked(&circularLinked);
+                freeDequeLinked(&dequeLinked);
+                freePriorityLinked(&priorityLinked);
+                return 0;
+
             default:
                 printf("\nInvalid choice! Please try again.\n");
         }
     }
 
+    freeLinearLinked(&linearLinked);
+    freeCircularLinked(&circularLinked);
+    freeDequeLinked(&dequeLinked);
+    freePriorityLinked(&priorityLinked);
     return 0;
 }
