@@ -81,7 +81,7 @@ struct Node* createNode(int value) {
     newNode->prev = NULL;   // new node doesn't point backward yet
     return newNode;
 }
-
+    
 /*
  * Creates the doubly linked list from scratch by asking the user for n values.
  *
