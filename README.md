@@ -66,6 +66,7 @@ Each data-structure folder contains:
 | 567 | Permutation in String | `567_Permutation_in_String.py` |
 | 704 | Binary Search | `704_Binary_Search.py` |
 | 744 | Find Smallest Letter Greater Than Target | `744_Find_Smallest_Letter_Greater_Than_Target.py` |
+| 1929 | Concatenation of Array | `1929_Concatenation_of_Array.py` |
 
 ---
 
