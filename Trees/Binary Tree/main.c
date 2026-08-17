@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "Queue.h"
+#include "Stack.h"
 
 Node *root = NULL;
 
@@ -48,6 +49,8 @@ void TreeCreate()
     }
 }
 
+// Recursive traversal--
+
 void Preorder(Node *p)
 {
     if (p)
@@ -75,6 +78,82 @@ void Postorder(Node *p)
         printf("%d ", p->data);
     }
 }
+
+// Iterative Traversal--
+
+void IPreorder(Node *p)
+{
+    struct Stack stk;
+    create_stack(&stk, 100);
+
+    while (p || !IsEmpty(stk))
+    {
+        if (p)
+        {
+            printf("%d ", p->data);
+            push(&stk, p);
+            p = p->lchild;
+        }
+        else
+        {
+            p = pop(&stk);
+            p = p->rchild;
+        }
+    }
+}
+
+void IInorder(Node *p){
+    struct Stack stk;
+    create_stack(&stk, 100);
+     
+    while (p || !IsEmpty(stk))
+    {
+        if (p)
+        {
+            push(&stk, p);
+            p = p->lchild;
+            
+        }
+        else
+        {
+            p = pop(&stk);
+            printf("%d ", p->data);
+            p = p->rchild;
+        }
+    }
+
+}
+
+void IPostorder(Node *p){
+    struct Stack stk;
+    Node *lastVisited = NULL;
+    Node *peekNode = NULL;
+    create_stack(&stk, 100);
+
+    while (p || !IsEmpty(stk))
+    {
+        if (p)
+        {
+            push(&stk, p);
+            p = p->lchild;
+        }
+        else
+        {
+            peekNode = stk.S[stk.top];
+
+            if (peekNode->rchild && lastVisited != peekNode->rchild)
+            {
+                p = peekNode->rchild;
+            }
+            else
+            {
+                printf("%d ", peekNode->data);
+                lastVisited = pop(&stk);
+            }
+        }
+    }
+}
+
 int main()
 {
 
@@ -89,6 +168,18 @@ int main()
     printf("Inorder: ");
 
     Inorder(root);
+    printf("\n");
+
+    printf("Iterative Preorder: ");
+    IPreorder(root);
+    printf("\n");
+
+    printf("Iterative Postorder: ");
+    IPostorder(root);
+    printf("\n");
+
+    printf("Iterative Inorder: ");
+    IInorder(root);
     printf("\n");
     return 0;
 }
