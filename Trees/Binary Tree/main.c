@@ -102,17 +102,17 @@ void IPreorder(Node *p)
     }
 }
 
-void IInorder(Node *p){
+void IInorder(Node *p)
+{
     struct Stack stk;
     create_stack(&stk, 100);
-     
+
     while (p || !IsEmpty(stk))
     {
         if (p)
         {
             push(&stk, p);
             p = p->lchild;
-            
         }
         else
         {
@@ -121,10 +121,10 @@ void IInorder(Node *p){
             p = p->rchild;
         }
     }
-
 }
 
-void IPostorder(Node *p){
+void IPostorder(Node *p)
+{
     struct Stack stk;
     Node *lastVisited = NULL;
     Node *peekNode = NULL;
@@ -150,6 +150,30 @@ void IPostorder(Node *p){
                 printf("%d ", peekNode->data);
                 lastVisited = pop(&stk);
             }
+        }
+    }
+}
+
+void LevelOrderTraversal(struct Node *root)
+{
+    struct Circular_Queue q;
+    create(&q, 100);
+
+    printf("%d ", root->data);
+    enqueue(&q, root);
+
+    while (!isEmpty(q))
+    {
+        root = dequeue(&q);
+        if (root->lchild)
+        {
+            printf("%d ", root->lchild->data);
+            enqueue(&q, root->lchild);
+        }
+        if (root->rchild)
+        {
+            printf("%d ", root->rchild->data);
+            enqueue(&q, root->rchild);
         }
     }
 }
@@ -180,6 +204,10 @@ int main()
 
     printf("Iterative Inorder: ");
     IInorder(root);
+    printf("\n");
+
+    printf("Level Order Traversal: ");
+    LevelOrderTraversal(root);
     printf("\n");
     return 0;
 }
