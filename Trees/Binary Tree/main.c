@@ -154,7 +154,7 @@ void IPostorder(Node *p)
     }
 }
 
-void LevelOrderTraversal(struct Node *root)
+void LevelOrderTraversal(Node *root)
 {
     struct Circular_Queue q;
     create(&q, 100);
@@ -175,6 +175,91 @@ void LevelOrderTraversal(struct Node *root)
             printf("%d ", root->rchild->data);
             enqueue(&q, root->rchild);
         }
+    }
+}
+
+int CountNodes(Node *root)
+{
+    if (root)
+    {
+        return CountNodes(root->lchild) + CountNodes(root->rchild) + 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+int CountLeafNodes(Node *root){
+    int x,y;
+    if(root!=NULL){
+        x = height(root->lchild);
+        y = height(root->rchild);
+        if(root->lchild == NULL && root->rchild == NULL){
+            return x+y+1;
+        }else{
+            return x+y;
+        }
+    }
+    return 0;
+}
+
+int Count_Nodes_With_Degree_2(Node *root){
+    int x,y;
+    if(root!=NULL){
+        x = height(root->lchild);
+        y = height(root->rchild);
+        if(root->lchild != NULL && root->rchild != NULL){
+            return x+y+1;
+        }else{
+            return x+y;
+        }
+    }
+    return 0;
+}
+
+int Count_Non_Leaf_Nodes(Node *root){
+    int x,y;
+    if(root!=NULL){
+        x = height(root->lchild);
+        y = height(root->rchild);
+        if(root->lchild == NULL || root->rchild == NULL){
+            return x+y+1;
+        }else{
+            return x+y;
+        }
+    }
+    return 0;
+}
+
+int Count_Nodes_With_Degree_1(Node *root){
+    int x,y;
+    if(root!=NULL){
+        x = height(root->lchild);
+        y = height(root->rchild);
+        //if((root->lchild != NULL && root->rchild == NULL) ||(root->lchild == NULL && root->rchild != NULL))
+        if(root->lchild!=NULL ^ root->rchild==NULL){
+            return x+y+1;
+        }else{
+            return x+y;
+        }
+    }
+    return 0;
+}
+
+
+int height(Node *root)
+{
+    int x=0,y=0;
+    if(root==0){
+        return 0;
+    }
+    x = height(root->lchild);
+    y = height(root->rchild);
+    if(x>y){
+        return x+1;
+    }else{
+        return y+1;
     }
 }
 
@@ -208,6 +293,12 @@ int main()
 
     printf("Level Order Traversal: ");
     LevelOrderTraversal(root);
+    printf("\n");
+
+    printf("Nodes' count: %d" , CountNodes(root));
+    printf("\n");
+
+    printf("Height of the tree: %d" , height(root));
     printf("\n");
     return 0;
 }
